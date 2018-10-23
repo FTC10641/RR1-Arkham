@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Auto;
+package org.firstinspires.ftc.teamcode.NNAuto;
 
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
@@ -12,22 +12,21 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.teamcode.Hardware.BB13HW;
-import org.firstinspires.ftc.teamcode.Hardware.BB13Sensors;
+import org.firstinspires.ftc.teamcode.NNTele.NNHW;
+import org.firstinspires.ftc.teamcode.NNTele.NNSensors;
 
 import java.util.Locale;
 
-import static org.firstinspires.ftc.teamcode.Auto.AutoBot.State.Sample;
-import static org.firstinspires.ftc.teamcode.Auto.AutoBot.State.Sample;
 
 
-@Autonomous(name = "Sample")
+
+@Autonomous(name = "NNSample")
 
 
-public class Sample extends OpMode {
+public class NNSample extends OpMode {
 
-    BB13HW robot = new BB13HW();
-    BB13Sensors sensors = new BB13Sensors();
+    NNHW robot = new NNHW();
+    NNSensors sensors = new NNSensors();
     public SamplingOrderDetector detector;
 
     enum State {
@@ -95,8 +94,8 @@ public class Sample extends OpMode {
                 break;
 
             case left:
-                robot.TurnAbsolute(20,gyroangle);
-                if (gyroangle>=18&&gyroangle<=22&&CurrentTime>=5){
+                robot.TurnAbsolute(25,gyroangle);
+                if (gyroangle>=23&&gyroangle<=27&&CurrentTime>=2){
                     state = State.Forward;
                     time.reset();
                     robot.Kill();
@@ -105,7 +104,7 @@ public class Sample extends OpMode {
 
             case center:
                 robot.TurnAbsolute(0,gyroangle);
-                if (gyroangle>=-2&&gyroangle<=2&&CurrentTime>=5){
+                if (gyroangle>=-2&&gyroangle<=2&&CurrentTime>=2){
                     state = State.Forward;
                     time.reset();
                     robot.Kill();
@@ -113,8 +112,8 @@ public class Sample extends OpMode {
                 break;
 
             case right:
-                robot.TurnAbsolute(-20,gyroangle);
-                if (gyroangle>=-22&&gyroangle<=-18&&CurrentTime>=5){
+                robot.TurnAbsolute(-25,gyroangle);
+                if (gyroangle>=-27&&gyroangle<=-23&&CurrentTime>=2){
                     state = State.Forward;
                     time.reset();
                     robot.Kill();
@@ -122,17 +121,18 @@ public class Sample extends OpMode {
                 break;
 
             case Forward:
-                robot.Forward(30,1);
-                if(robot.DriveDone(30)){
-                        state = State.Stop;
-                        time.reset();
-                        robot.Kill();
+                robot.Forward(1,49);
+                if(robot.DriveDone(40)){
+                    state = State.Stop;
+                    time.reset();
+                    robot.Kill();
                 }
                 break;
 
             case Stop:
                 time.reset();
                 robot.Kill();
+                detector.disable();
                 break;
 
         }
@@ -144,4 +144,5 @@ public class Sample extends OpMode {
     String formatDegrees(double degrees) {
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
+
 }

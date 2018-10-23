@@ -128,7 +128,7 @@ public class BB13HW {
         rightDrive.setPower(-speed);
     }
 
-    public void TurnAbsoulte(double target, double heading){
+    public void TurnAbsolute(double target, double heading){
 
         leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

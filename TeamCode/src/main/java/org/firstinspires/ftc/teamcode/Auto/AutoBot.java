@@ -79,7 +79,7 @@ public class AutoBot extends OpMode {
                 break;
 
             case TurnAround:
-                robot.TurnAbsoulte(-90,gyroangle);
+                robot.TurnAbsolute(-90,gyroangle);
                 if (gyroangle>=-92&&gyroangle<=-88&& CurrentTime>=1.5){
                     state = State.DriveBack;
                     time.reset();
