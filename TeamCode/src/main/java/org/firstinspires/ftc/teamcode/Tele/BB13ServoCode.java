@@ -28,8 +28,8 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 //Disabled
-@TeleOp(name="owo", group="Linear Opmode")
-
+@TeleOp(name="servo toggle", group="Linear Opmode")
+@Disabled
 public class BB13ServoCode extends owo
 {
 

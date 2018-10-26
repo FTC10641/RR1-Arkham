@@ -35,6 +35,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -64,12 +65,21 @@ public class NoName extends LinearOpMode
     private DcMotor RR = null;
     private DcMotor LR = null;
     private DcMotor LF = null;
+    private Servo servo = null;
+    private Servo servo2 = null;
+    private boolean toggle = true;
+    private boolean toggle2 = false;
 
     @Override
     public void runOpMode() {
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+        servo = hardwareMap.servo.get("ls");
+        servo2 = hardwareMap.servo.get("rs");
+
+        servo.setPosition(1);
+        servo2.setPosition(0);
 
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
@@ -101,16 +111,31 @@ public class NoName extends LinearOpMode
             while (opModeIsActive()) {
                 // POV Mode uses left stick to go forward, and right stick to turn.
                 // - This uses basic math to combine motions and is easier to drive straight.
+                if (toggle && gamepad1.left_bumper) {  // Only execute once per Button push
+                    toggle = false;  // Prevents this section of code from being called again until the Button is released and re-pressed
+                    if (toggle2) {
+                        toggle2 = false;
+                        servo.setPosition(0.25);
+                        servo2.setPosition(0.75);
+                    } else {
+                        toggle2 = true;
+                        servo.setPosition(1);
+                        servo2.setPosition(0);
+                    }
+                } else if(gamepad1.left_bumper == false) {
+                    toggle = true; // Button has been released, so this allows a re-press to activate the code above.
+                }
+
                 double RRPower;
                 double RFPower;
                 double LFPower;
                 double LRPower;
-                double drive = -gamepad1.left_stick_y;
-                double turn = -gamepad1.right_stick_x;
-                LRPower = Range.clip(drive - turn, -1.0, 1.0);
-                LFPower = Range.clip(drive - turn, -1.0, 1.0);
-                RRPower = Range.clip(drive + turn, -1.0, 1.0);
-                RFPower = Range.clip(drive + turn, -1.0, 1.0);
+                double drive = gamepad1.left_stick_y;
+                double turn = gamepad1.right_stick_x;
+                LRPower = Range.clip(drive + turn, -1.0, 1.0);
+                LFPower = Range.clip(drive + turn, -1.0, 1.0);
+                RRPower = Range.clip(drive - turn, -1.0, 1.0);
+                RFPower = Range.clip(drive - turn, -1.0, 1.0);
                 // Tank Mode uses one stick to control each wheel.
                 // - This requires no math, but it is hard to drive forward slowly and keep straight.
                 // leftPower  = -gamepad1.left_stick_y ;
