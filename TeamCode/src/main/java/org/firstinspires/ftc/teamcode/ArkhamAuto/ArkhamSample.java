@@ -1,32 +1,30 @@
-package org.firstinspires.ftc.teamcode.NNAuto;
+package org.firstinspires.ftc.teamcode.ArkhamAuto;
 
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.teamcode.NNTele.NNHW;
-import org.firstinspires.ftc.teamcode.NNTele.NNSensors;
+import org.firstinspires.ftc.teamcode.ArkhamTele.ArkhamHW;
+import org.firstinspires.ftc.teamcode.ArkhamTele.ArkhamSensors;
 
 import java.util.Locale;
 
 
 
 
-@Autonomous(name = "NNSample")
+@Autonomous(name = "ArkhamSample")
 
 
-public class NNSample extends OpMode {
+public class ArkhamSample extends OpMode {
 
-    NNHW robot = new NNHW();
-    NNSensors sensors = new NNSensors();
+    ArkhamHW robot = new ArkhamHW();
+    ArkhamSensors sensors = new ArkhamSensors();
     public SamplingOrderDetector detector;
 
     enum State {

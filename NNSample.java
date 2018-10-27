@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.NNAuto;
+package org.firstinspires.ftc.teamcode.ArkhamAuto;
 
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
@@ -12,8 +12,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.teamcode.NNTele.NNHW;
-import org.firstinspires.ftc.teamcode.NNTele.NNSensors;
+import org.firstinspires.ftc.teamcode.ArkhamTele.NNHW;
+import org.firstinspires.ftc.teamcode.ArkhamTele.NNSensors;
 
 import java.util.Locale;
 

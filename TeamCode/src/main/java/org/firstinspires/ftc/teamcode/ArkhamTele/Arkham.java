@@ -26,15 +26,13 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.firstinspires.ftc.teamcode.NNTele;
+package org.firstinspires.ftc.teamcode.ArkhamTele;
 
 
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -54,9 +52,9 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 //Disabled
-@TeleOp(name="NoName", group="Linear Opmode")
+@TeleOp(name="Arkham", group="Linear Opmode")
 
-public class NoName extends LinearOpMode
+public class Arkham extends LinearOpMode
 {
 
     // Declare OpMode members.

@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.teamcode.NNTele;
+package org.firstinspires.ftc.teamcode.ArkhamTele;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-public class NNSensors extends NNHW {
+public class ArkhamSensors extends ArkhamHW {
 
     public BNO055IMU imu;
 
@@ -13,7 +13,7 @@ public class NNSensors extends NNHW {
 
     HardwareMap hwMap = null;
 
-    public NNSensors(){}
+    public ArkhamSensors(){}
 
     public void initSensors(HardwareMap ahwMap) {
         hwMap = ahwMap;

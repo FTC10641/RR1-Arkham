@@ -1,20 +1,12 @@
-package org.firstinspires.ftc.teamcode.NNTele;
-import android.text.util.Rfc822Token;
+package org.firstinspires.ftc.teamcode.ArkhamTele;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.AnalogInput;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 /** Copy of BB13HW, adding specifications for all four motors. **/
 
-public class NNHW {
+public class ArkhamHW {
 
     public DcMotor RF = null;
     public DcMotor RR = null;
@@ -34,7 +26,7 @@ public class NNHW {
 
     /** Constructor **/
 
-    public NNHW() {
+    public ArkhamHW() {
     }
 
     /** Initialize standard Hardware interfaces **/
