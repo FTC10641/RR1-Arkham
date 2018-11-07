@@ -43,6 +43,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import java.util.List;
 
 import static org.firstinspires.ftc.teamcode.ArkhamTele.ArkhamVision.LABEL_GOLD_MINERAL;
+import static org.firstinspires.ftc.teamcode.ArkhamTele.ArkhamVision.LABEL_SILVER_MINERAL;
 
 
 /**
