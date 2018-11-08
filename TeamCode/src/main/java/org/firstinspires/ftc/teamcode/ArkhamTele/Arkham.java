@@ -79,6 +79,9 @@ public class Arkham extends LinearOpMode
         Lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         Lift2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        Lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Lift2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
 
 
 
@@ -111,29 +114,41 @@ public class Arkham extends LinearOpMode
                     armtoggle = false;  // Prevents this section of code from being called again until the Button is released and re-pressed
                     if (armtoggle2) {
                         armtoggle2 = false;
-                        armservo.setPosition(.1);
                     } else {
                         armtoggle2 = true;
-                        armservo.setPosition(0);
                     }
                 } else if(gamepad1.right_bumper == false) {
                     armtoggle = true; // Button has been released, so this allows a re-press to activate the code above.
                 }
 
-
-                if (gamepad1.a){
+                if (armtoggle2 && (Math.abs(Lift.getCurrentPosition()/COUNTS_PER_INCH) < 12) && (Math.abs(Lift2.getCurrentPosition()/COUNTS_PER_INCH)<12) ){
+                   Lift.setTargetPosition((int)COUNTS_PER_INCH*12);
+                   Lift2.setTargetPosition((int)COUNTS_PER_INCH*12);
+                   Lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                   Lift2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     Lift.setPower(1);
-                    Lift2.setPower(1);
-                    }
+                    Lift2.setPower(1);}
+                else if(!armtoggle2 &&  (Math.abs(Lift.getCurrentPosition()/COUNTS_PER_INCH) > 0) && (Math.abs(Lift2.getCurrentPosition()/COUNTS_PER_INCH)>0)){
+                    Lift.setTargetPosition((int)COUNTS_PER_INCH*0);
+                Lift2.setTargetPosition((int)COUNTS_PER_INCH*0);
+                Lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                Lift2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                Lift.setPower(-1);
+                Lift2.setPower(-1);}
 
-                    else if (gamepad1.b){
-                    Lift.setPower(-1);
-                    Lift2.setPower(-1);
+                else{  Lift.setPower(0);
+                    Lift2.setPower(0);}
+
+                if ((Math.abs(Lift.getCurrentPosition()/COUNTS_PER_INCH) > 6) && (Math.abs(Lift2.getCurrentPosition()/COUNTS_PER_INCH)>6)){
+                    armservo.setPosition(.2);
                 }
-                else {
-                    Lift.setPower(0);
-                    Lift2.setPower(0);
+                else if (gamepad1.a && (Math.abs(Lift.getCurrentPosition()/COUNTS_PER_INCH) > 6) && (Math.abs(Lift2.getCurrentPosition()/COUNTS_PER_INCH)>6)){
+
+                    armservo.setPosition(.4);
                 }
+
+                else {armservo.setPosition(0);}
+
 
 
 
