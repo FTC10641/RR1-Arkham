@@ -1,11 +1,10 @@
 package org.firstinspires.ftc.teamcode.ArkhamTele;
 
-
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -16,140 +15,62 @@ import com.qualcomm.robotcore.util.Range;
 
 public class Arkham extends LinearOpMode
 {
-
+ArkhamHW robot = new ArkhamHW();
     // Declare OpMode members.
-    private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor RF = null;
-    private DcMotor RR = null;
-    private DcMotor LR = null;
-    private DcMotor LF = null;
-    private DcMotor I  =  null;
-    private DcMotor Lift = null;
-    private DcMotor Lift2 = null;
-    private Servo servo = null;
-    private Servo servo2 = null;
-    private Servo armservo = null;
+
     private boolean toggle = true;
     private boolean toggle2 = false;
     private boolean armtoggle = true;
     private  boolean armtoggle2 = false;
 
-    public static final double COUNTS_PER_MOTOR_REV =  537.6;    // eg: Andy Mark Motor Encoder
-    public static final double DRIVE_GEAR_REDUCTION = 1.75;     // This is < 1.0 if geared UP
-    public static final double WHEEL_DIAMETER_INCHES = 2.0;     // For figuring circumference
-    public static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415);
 
     @Override
     public void runOpMode() {
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-        servo = hardwareMap.servo.get("ls");
-        servo2 = hardwareMap.servo.get("rs");
-        armservo = hardwareMap.servo.get("as");
-
-        servo.setPosition(1);
-        servo2.setPosition(0);
-        armservo.setPosition(0);
-
-
-        // Initialize the hardware variables. Note that the strings used here as parameters
-        // to 'get' must correspond to the names assigned during the robot configuration
-        RR = hardwareMap.get(DcMotor.class, "RR");
-        RF = hardwareMap.get(DcMotor.class, "RF");
-        LF = hardwareMap.get(DcMotor.class, "LF");
-        LR = hardwareMap.get(DcMotor.class, "LR");
-        I  = hardwareMap.get(DcMotor.class,  "i");
-        Lift = hardwareMap.get(DcMotor.class,"L");
-        Lift2 = hardwareMap.get(DcMotor.class, "L2");
-        // Most robots need the motor on one side to be reversed to drive forward
-        // Reverse the motor that runs backwards when connected directly to the battery
-        LF.setDirection(DcMotor.Direction.FORWARD);
-        LR.setDirection(DcMotor.Direction.FORWARD);
-        RR.setDirection(DcMotor.Direction.REVERSE);
-        RF.setDirection(DcMotor.Direction.REVERSE);
-
-        //The brake allows motors to stop more suddenly instead of drifting to a stop
-        LF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        LR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        RF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        RR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        I.setZeroPowerBehavior (DcMotor.ZeroPowerBehavior.BRAKE);
-        Lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        Lift2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        Lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        Lift2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-
-
+        robot.init(hardwareMap);
 
 
         waitForStart();
         if (opModeIsActive()) {
 
-            runtime.reset();
 
             while (opModeIsActive()) {
+
+
                 // POV Mode uses left stick to go forward, and right stick to turn.
                 // - This uses basic math to combine motions and is easier to drive straight.
                 if (toggle && gamepad1.left_bumper) {
                     toggle = false;  // Prevents this section of code from being called again until the Button is released and re-pressed
                     if (toggle2) {
                         toggle2 = false;
-                        servo.setPosition(0.25);
-                        servo2.setPosition(0.75);
+                        robot.servo.setPosition(0.25);
+                       robot.servo2.setPosition(0.75);
                     } else {
                         toggle2 = true;
-                        servo.setPosition(1);
-                        servo2.setPosition(0);
+                        robot.servo.setPosition(1);
+                        robot.servo2.setPosition(0);
                     }
                 } else if(gamepad1.left_bumper == false) {
                     toggle = true; // Button has been released, so this allows a re-press to activate the code above.
                 }
 
 
-                if (armtoggle && gamepad1.right_bumper) {
-                    armtoggle = false;  // Prevents this section of code from being called again until the Button is released and re-pressed
-                    if (armtoggle2) {
-                        armtoggle2 = false;
-                    } else {
-                        armtoggle2 = true;
+                if (gamepad2.dpad_down && !robot.bottom.getState() == false){
+                        robot.Lift.setPower(1);
+                        robot.Lift2.setPower(1);
                     }
-                } else if(gamepad1.right_bumper == false) {
-                    armtoggle = true; // Button has been released, so this allows a re-press to activate the code above.
+                    else if(gamepad2.dpad_up && !robot.top.getState() == false){
+                        robot.Lift.setPower(-1);
+                        robot.Lift2.setPower(-1);}
+                    else {
+                        robot.Lift.setPower(0);
+                        robot.Lift2.setPower(0);
                 }
 
-                if (armtoggle2 && (Math.abs(Lift.getCurrentPosition()/COUNTS_PER_INCH) < 12) && (Math.abs(Lift2.getCurrentPosition()/COUNTS_PER_INCH)<12) ){
-                   Lift.setTargetPosition((int)COUNTS_PER_INCH*12);
-                   Lift2.setTargetPosition((int)COUNTS_PER_INCH*12);
-                   Lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                   Lift2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    Lift.setPower(1);
-                    Lift2.setPower(1);}
-                else if(!armtoggle2 &&  (Math.abs(Lift.getCurrentPosition()/COUNTS_PER_INCH) > 0) && (Math.abs(Lift2.getCurrentPosition()/COUNTS_PER_INCH)>0)){
-                    Lift.setTargetPosition((int)COUNTS_PER_INCH*0);
-                Lift2.setTargetPosition((int)COUNTS_PER_INCH*0);
-                Lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                Lift2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                Lift.setPower(-1);
-                Lift2.setPower(-1);}
-
-                else{  Lift.setPower(0);
-                    Lift2.setPower(0);}
-
-                if ((Math.abs(Lift.getCurrentPosition()/COUNTS_PER_INCH) > 6) && (Math.abs(Lift2.getCurrentPosition()/COUNTS_PER_INCH)>6)){
-                    armservo.setPosition(.2);
-                }
-                else if (gamepad1.a && (Math.abs(Lift.getCurrentPosition()/COUNTS_PER_INCH) > 6) && (Math.abs(Lift2.getCurrentPosition()/COUNTS_PER_INCH)>6)){
-
-                    armservo.setPosition(.4);
-                }
-
-                else {armservo.setPosition(0);}
-
-
+                if (gamepad2.y){robot.armservo.setPosition(0.015);}
+                if(gamepad2.right_bumper){robot.armservo.setPosition(0.18);}
 
 
                 double IntakePower;
@@ -171,13 +92,13 @@ public class Arkham extends LinearOpMode
                 LRPower = (float) scaleInput(LRPower);
                 RRPower = (float) scaleInput(RRPower);
                 RFPower =  (float) scaleInput(RFPower);
-                I.setPower(IntakePower);
-                LR.setPower(LRPower);
-                LF.setPower(LFPower);
-                RR.setPower(RRPower);
-                RF.setPower(RFPower);
+                robot.I.setPower(IntakePower);
+                robot.LR.setPower(LRPower);
+                robot.LF.setPower(LFPower);
+                robot.RR.setPower(RRPower);
+                robot.RF.setPower(RFPower);
                 // Show the elapsed game time and wheel power.
-                telemetry.addData("Status", "Run Time: " + runtime.toString());
+
                 telemetry.addData("Motors", "left (%.2f), right (%.2f)", LRPower, LFPower, RRPower, RFPower);
                 telemetry.update();
             }
