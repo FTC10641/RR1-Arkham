@@ -2,12 +2,9 @@ package org.firstinspires.ftc.teamcode.ArkhamTele;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.teamcode.SubSystems.ArkhamHW;
 
 
 //Disabled
@@ -16,21 +13,21 @@ import com.qualcomm.robotcore.util.Range;
 public class Arkham extends LinearOpMode
 {
 ArkhamHW robot = new ArkhamHW();
-    // Declare OpMode members.
+
+    /** Declares Arkham TeleOp variables that are used in the Sorter Servo code. **/
 
     private boolean toggle = true;
     private boolean toggle2 = false;
-    private boolean armtoggle = true;
-    private  boolean armtoggle2 = false;
 
 
     @Override
     public void runOpMode() {
 
+    /** Adds feedback on the Drive Station phone about the status of the robot. **/
+
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         robot.init(hardwareMap);
-
 
         waitForStart();
         if (opModeIsActive()) {
@@ -39,39 +36,45 @@ ArkhamHW robot = new ArkhamHW();
             while (opModeIsActive()) {
 
 
-                // POV Mode uses left stick to go forward, and right stick to turn.
-                // - This uses basic math to combine motions and is easier to drive straight.
-                if (toggle && gamepad1.left_bumper) {
-                    toggle = false;  // Prevents this section of code from being called again until the Button is released and re-pressed
+                /*if (toggle && gamepad1.left_bumper) {
+                    toggle = false;  /** Prevents this section of code from being called again until the Button is released and re-pressed.
                     if (toggle2) {
                         toggle2 = false;
-                        robot.servo.setPosition(0.25);
-                       robot.servo2.setPosition(0.75);
+                        robot.LeftSorterServo.setPosition(0.59);
+                       robot.RightSorterServo.setPosition(0.4);
                     } else {
                         toggle2 = true;
-                        robot.servo.setPosition(1);
-                        robot.servo2.setPosition(0);
+                        robot.LeftSorterServo.setPosition(1);
+                        robot.RightSorterServo.setPosition(0);
                     }
                 } else if(gamepad1.left_bumper == false) {
-                    toggle = true; // Button has been released, so this allows a re-press to activate the code above.
+                    toggle = true;
+                    /** Button has been released, so this allows a re-press to activate the code above.
+                }*/
+
+
+                /** Controls the Lift Motor, allowing it to raise or lower on command **/
+
+                if (gamepad2.dpad_down && !robot.BottomSwitch.getState() == false){
+                    robot.LiftMotor.setPower(1);
+                    robot.LiftMotor2.setPower(-1);
+                }
+                else if(gamepad2.dpad_up && !robot.TopSwitch.getState() == false){
+                    robot.LiftMotor.setPower(-1);
+                    robot.LiftMotor2.setPower(1);}
+                else {
+                    robot.LiftMotor.setPower(0);
+                    robot.LiftMotor2.setPower(0);
                 }
 
 
-                if (gamepad2.dpad_down && !robot.bottom.getState() == false){
-                        robot.Lift.setPower(1);
-                        robot.Lift2.setPower(1);
-                    }
-                    else if(gamepad2.dpad_up && !robot.top.getState() == false){
-                        robot.Lift.setPower(-1);
-                        robot.Lift2.setPower(-1);}
-                    else {
-                        robot.Lift.setPower(0);
-                        robot.Lift2.setPower(0);
-                }
+                /** Controls the Arm Servo, allowing it to move to certain positions on command. **/
 
-                if (gamepad2.y){robot.armservo.setPosition(0.015);}
-                if(gamepad2.right_bumper){robot.armservo.setPosition(0.18);}
+                if (gamepad2.y){robot.ArmServo.setPosition(0.015);}
+                if(gamepad2.right_bumper){robot.ArmServo.setPosition(0.14);}
 
+
+                /** Declares and uses motor variables for the Drive Train and Intake **/
 
                 double IntakePower;
                 double RRPower;
@@ -92,11 +95,11 @@ ArkhamHW robot = new ArkhamHW();
                 LRPower = (float) scaleInput(LRPower);
                 RRPower = (float) scaleInput(RRPower);
                 RFPower =  (float) scaleInput(RFPower);
-                robot.I.setPower(IntakePower);
-                robot.LR.setPower(LRPower);
-                robot.LF.setPower(LFPower);
-                robot.RR.setPower(RRPower);
-                robot.RF.setPower(RFPower);
+                robot.Intake.setPower(IntakePower);
+                robot.LeftRearMotor.setPower(LRPower);
+                robot.LeftFrontMotor.setPower(LFPower);
+                robot.RightRearMotor.setPower(RRPower);
+                robot.RightFrontMotor.setPower(RFPower);
                 // Show the elapsed game time and wheel power.
 
                 telemetry.addData("Motors", "left (%.2f), right (%.2f)", LRPower, LFPower, RRPower, RFPower);
@@ -105,6 +108,8 @@ ArkhamHW robot = new ArkhamHW();
         }
     }
 
+    /** This Scale Array function establishes a set of increasing values
+        that is used to control the speed of motors and servos. It allows them to exponentially increases their rotation.  **/
 
     public double scaleInput(double dVal)  {
         double[] scaleArray = { 0.0, 0.05, 0.09, 0.10, 0.12, 0.15, 0.18, 0.24,

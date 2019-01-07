@@ -30,20 +30,15 @@ package org.firstinspires.ftc.teamcode.ArkhamTele;
 
 
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.teamcode.SubSystems.ArkhamVision;
 
 import java.util.List;
 
-import static org.firstinspires.ftc.teamcode.ArkhamTele.ArkhamVision.LABEL_GOLD_MINERAL;
-import static org.firstinspires.ftc.teamcode.ArkhamTele.ArkhamVision.LABEL_SILVER_MINERAL;
+import static org.firstinspires.ftc.teamcode.SubSystems.ArkhamVision.LABEL_GOLD_MINERAL;
 
 
 /**
