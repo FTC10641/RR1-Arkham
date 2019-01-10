@@ -26,7 +26,10 @@ public class DepotSample extends OpMode {
         ArkhamVision vision = new ArkhamVision();
 
         enum State {
-            DepotDetach, DepotDriveOff, DepotLiftDown, DepotLeft, DepotCenter, DepotRight, DepotCenterKnockOffGold, DepotCenterReverse, DepotSample, DepotDelay, DepotLeftKnockOffGold, DepotLeftTurn1, DepotLeftForward2, LeftReverse, DepotRightKnockOffGold, DepotReverse, DepotStop
+            DepotDetach, DepotDriveOff, DepotLiftDown, DepotLeft, DepotCenter, DepotRight,
+            DepotCenterKnockOffGold, DepotCenterReverse, DepotSample, LeftDepotDelay,
+            DepotLeftKnockOffGold, DepotLeftTurn1, DepotLeftForward2, DepotLeftReverse,
+            DepotRightKnockOffGold, DepotReverse, DepotStop
         }
 
         DepotSample.State state;
@@ -149,7 +152,7 @@ public class DepotSample extends OpMode {
                 case DepotLeft:
                     robot.TurnAbsolute(25, gyroangle);
                     if (gyroangle >= 23 && gyroangle <= 27) {
-                        state = DepotSample.State.DepotLeftKnockOffGold;
+                        state = State.DepotLeftKnockOffGold;
                         time.reset();
                         robot.Kill();
                     }
@@ -167,16 +170,16 @@ public class DepotSample extends OpMode {
                 case DepotRight:
                     robot.TurnAbsolute(-25, gyroangle);
                     if (gyroangle >= -27 && gyroangle <= -23) {
-                        state = DepotSample.State.DepotRightKnockOffGold;
+                        state = State.DepotRightKnockOffGold;
                         time.reset();
                         robot.Kill();
                     }
                     break;
 
                 case DepotLeftKnockOffGold:
-                    robot.Forward(1, 35);
+                    robot.Forward(1, 52);
                     robot.Intake.setPower(-1);
-                    if (robot.DriveDone(35)) {
+                    if (robot.DriveDone(52)) {
                         state = State.DepotLeftTurn1;
                         robot.Intake.setPower(0);
                         time.reset();
@@ -196,7 +199,7 @@ public class DepotSample extends OpMode {
                 case DepotLeftForward2:
                     robot.Forward(1, 20);
                     if (robot.DriveDone(20)){
-                        state = State.DepotDelay;
+                        state = State.LeftDepotDelay;
                         time.reset();
                         robot.Kill();
                     }
@@ -222,9 +225,19 @@ public class DepotSample extends OpMode {
                     }
                     break;
 
-                case DepotDelay:
-                    if (CurrentTime >= 2.0) {
-                        state = DepotSample.State.DepotReverse;
+                case LeftDepotDelay:
+                    if (CurrentTime >= .25) {
+                        state = DepotSample.State.DepotLeftReverse;
+                        time.reset();
+                        robot.Kill();
+                    }
+                    break;
+
+                case DepotLeftReverse:
+                    robot.Reverse(1, 87);
+                    if (robot.DriveDone(87)) {
+                        robot.Intake.setPower(0);
+                        state = State.DepotStop;
                         time.reset();
                         robot.Kill();
                     }
@@ -236,7 +249,6 @@ public class DepotSample extends OpMode {
                     break;
             }
         }
-
 
         String formatAngle(AngleUnit angleUnit, double angle) {
             return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
