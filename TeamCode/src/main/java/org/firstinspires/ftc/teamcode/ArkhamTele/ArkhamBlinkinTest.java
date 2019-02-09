@@ -6,18 +6,30 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.SubSystems.ArkhamHW;
 
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.internal.system.Deadline;
+
+import java.util.concurrent.TimeUnit;
+
 
 //Disabled
-@TeleOp(name="Arkham", group="Linear Opmode")
+@TeleOp(name="ArkhamBlinkinTest", group="Linear Opmode")
 
-public class Arkham extends LinearOpMode
+public class ArkhamBlinkinTest extends LinearOpMode
 {
 ArkhamHW robot = new ArkhamHW();
-
 
     private boolean toggle = true;
     private boolean toggle2 = false;
 
+    RevBlinkinLedDriver blinkinLedDriver;
+    RevBlinkinLedDriver.BlinkinPattern liftdownpattern;
+    RevBlinkinLedDriver.BlinkinPattern liftuppattern;
 
     @Override
     public void runOpMode() {
@@ -27,6 +39,11 @@ ArkhamHW robot = new ArkhamHW();
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         robot.init(hardwareMap);
+
+        blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class, "blinkin");
+
+        liftdownpattern = RevBlinkinLedDriver.BlinkinPattern.BLUE;
+        liftuppattern = RevBlinkinLedDriver.BlinkinPattern.ORANGE;
 
         waitForStart();
         if (opModeIsActive()) {
@@ -67,12 +84,22 @@ ArkhamHW robot = new ArkhamHW();
 
                 }
 
+                if(robot.TopSwitch.getState() == true) {
+
+                    blinkinLedDriver.setPattern(liftuppattern);
+
+                }
+
+                if(robot.BottomSwitch.getState() == true) {
+
+                    blinkinLedDriver.setPattern(liftdownpattern);
+
+                }
 
                 /** Controls the Arm Servo, allowing it to move to certain positions on command. **/
 
                 if (gamepad1.left_bumper){robot.BackServo.setPosition(0.25);}
                 if (gamepad1.right_bumper){robot.BackServo.setPosition(0);}
-                if (gamepad1.x){robot.RightServo.setPosition(0.85);}
 
                 if (gamepad2.a){robot.ArmServo.setPosition(0.015);}
                 if(gamepad2.y){robot.ArmServo.setPosition(0.12);}
