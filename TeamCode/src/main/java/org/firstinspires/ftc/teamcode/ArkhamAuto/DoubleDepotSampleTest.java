@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.ArkhamAuto;
 
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -18,29 +17,27 @@ import java.util.Locale;
 
 import static org.firstinspires.ftc.teamcode.SubSystems.ArkhamVision.LABEL_GOLD_MINERAL;
 
+@Autonomous(name = "DoubleDepotSampleTest")
 
-@Autonomous(name = "CraterSample")
-
-
-public class CraterSample extends OpMode {
+public class DoubleDepotSampleTest extends OpMode {
 
     ArkhamHW robot = new ArkhamHW();
     ArkhamSensors sensors = new ArkhamSensors();
     ArkhamVision vision = new ArkhamVision();
 
     enum State {
-        Detach,DriveOff,LiftDown,Left,Center,Right, CenterKnockOffGold,CenterReverse, CenterTurn1,
-        CenterForward1, CenterTurn2, CenterForward2, Sample, Backup, LeftTurn1, LeftTurn2,
-        LeftForward1, Delay, Reverse, LeftForward2, LeftKnockOffGold, RightKnockOffGold, MakerDrop,
-        RightReverse1, RightTurn1, RigtForward1, RightTurn2, RightForward2, Direction, MarkerDrop,
-        CraterLiftDown, CraterDriveOff, CraterDetach,
-        CraterLeft, CraterCenter, CraterRight, CraterSample, LeftMarkerDrop, LeftDepotDelay, DepotLeftReverse,
-        CenterMarkerDrop, CenterDepotDelay, LeftCraterDelay, CraterLeftReverse, CraterCenterReverse, RightForward1,
-        RightMarkerDrop, RightDelay, RightReverse2, CraterCenterReverse2, RightTurn3, Stop
+        DepotDetach, DepotDriveOff, DepotLiftDown, DepotRight, DepotLeft, DepotCenter,
+        DepotCenterKnockOffGold, DepotCenterReverse, DepotSample, RightDepotDelay,
+        DepotRightKnockOffGold, DepotRightTurn1, DepotRightForward2, DepotRightReverse,
+        DepotLeftKnockOffGold, DepotReverse, RightMarkerDrop, LeftMarkerDrop, CenterMarkerDrop,
+        CenterDepotDelay, DepotCenterTurn1, DepotCenterForward1, DepotCenterTurn2, DepotCenterForward2,
+        DepotLeftTurn1, DepotLeftForward2, LeftDepotDelay, DepotLeftReverse, DepotRightReverse2, DepotCenterReverse2,
+        LeftMarkerTurn1, LeftMarkerTurn2, DepotRightTurn2, DepotRightForward3, DepotRightTurn3, DepotRightForward4, DepotStop,
+        DoubleDepotLiftDown, DoubleDepotSample, DoubleDepotRight, DoubleDepotLeft, DoubleDepotCenter, DoubleDepotLeftKnockOffGold, DoubleDepotLeftTurn1, DoubleDepotLeftForward2, DoubleLeftMarkerTurn1, DoubleDepotLefForward3, DoubleDepotLeftForward3, DoubleDepotDriveOff
     }
 
     State state;
-    ElapsedTime time = new ElapsedTime();
+    ElapsedTime time;
     boolean right = false;
     boolean left = false;
     boolean center = false;
@@ -50,13 +47,12 @@ public class CraterSample extends OpMode {
         robot.init(hardwareMap);
         sensors.initSensors(hardwareMap);
         vision.initVision(hardwareMap);
-        state = State.CraterDetach;
-        ElapsedTime runtime = new ElapsedTime();
+        state = DepotSample.State.DepotDetach;
+        time = new ElapsedTime();
         robot.LiftMotor.setPower(.09);
         robot.LiftMotor2.setPower(.09);
         robot.RightServo.setPosition(0.85);
-
-
+        robot.ArmServo.setPosition(0.015);
     }
 
     @Override
@@ -64,61 +60,56 @@ public class CraterSample extends OpMode {
         double CurrentTime = time.time();
         telemetry.addData("time", CurrentTime);
         double gyroangle;
+        double lifty;
         sensors.angles = sensors.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        lifty = Double.parseDouble(formatAngle(sensors.angles.angleUnit, sensors.angles.secondAngle));
         gyroangle = Double.parseDouble(formatAngle(sensors.angles.angleUnit, sensors.angles.firstAngle));
         telemetry.addData("Heading", formatAngle(sensors.angles.angleUnit, sensors.angles.firstAngle));
-        telemetry.addData("Current State",state.toString());
+        telemetry.addData("Current State", state.toString());
         telemetry.update();
 
 
         switch (state) {
 
 
-            case CraterDetach:
+            case DepotDetach:
                 robot.LiftMotor.setPower(-1);
                 robot.LiftMotor2.setPower(1);
                 if (!robot.TopSwitch.getState() == true) {
                     robot.LiftMotor.setPower(0);
                     robot.LiftMotor2.setPower(0);
-                    state = CraterSample.State.CraterDriveOff;
+                    state = State.DoubleDepotDriveOff;
                     time.reset();
                     robot.Kill();
                 }
                 break;
             /** The robot goes down and lands**/
 
-            case CraterDriveOff:
+            case DoubleDepotDriveOff:
                 robot.Forward(1, 2);
                 if (robot.DriveDone(2)) {
-                    state = State.CraterLiftDown;
+                    state = State.DoubleDepotLiftDown;
                     time.reset();
                     robot.Kill();
                 }
                 break;
             /** The robot goes forward to bring the latch completely off the lander **/
 
-            case CraterLiftDown:
+            case DoubleDepotLiftDown:
                 robot.LiftMotor.setPower(1);
                 robot.LiftMotor2.setPower(-1);
                 if (!robot.BottomSwitch.getState() == true) {
                     robot.LiftMotor.setPower(0);
                     robot.LiftMotor2.setPower(0);
-                    state = State.CraterSample;
+                    state = State.DoubleDepotSample;
                     time.reset();
                     robot.Kill();
                 }
                 break;
+            /** the lift goes back down**/
 
 
-            case CraterSample:
-                if (CurrentTime >= 5) {
-                    telemetry.addData("Gold Mineral Position", "Center");
-                    state = State.CraterCenter;
-                    center = true;
-                    time.reset();
-                    robot.Kill();
-                }
-
+            case DoubleDepotSample:
                 if (vision.tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
@@ -141,19 +132,19 @@ public class CraterSample extends OpMode {
                             if ((goldMineralX != -1 && silverMineral1X != -1) || (goldMineralX != -1 && silverMineral2X != -1) || (silverMineral1X != -1 && silverMineral2X != -1)) {
                                 if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
                                     telemetry.addData("Gold Mineral Position", "Left");
-                                    state = State.CraterLeft;
+                                    state = State.DoubleDepotLeft;
                                     left = true;
                                     time.reset();
                                     robot.Kill();
                                 } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
                                     telemetry.addData("Gold Mineral Position", "Right");
-                                    state = State.CraterRight;
+                                    state = State.DoubleDepotRight;
                                     time.reset();
                                     right = true;
                                     robot.Kill();
                                 } else {
                                     telemetry.addData("Gold Mineral Position", "Center");
-                                    state = State.CraterCenter;
+                                    state = State.DoubleDepotCenter;
                                     center = true;
                                     time.reset();
                                     robot.Kill();
@@ -164,173 +155,109 @@ public class CraterSample extends OpMode {
                 }
                 break;
 
-
-            case CraterLeft:
-                robot.TurnAbsolute(22,gyroangle);
-                if (gyroangle>=20 && gyroangle<=24 && CurrentTime >= 1.0){
-                    state = State.LeftKnockOffGold;
+            case DoubleDepotLeft:
+                robot.TurnAbsolute(25, gyroangle);
+                if (gyroangle >= 23 && gyroangle <= 27) {
+                    state = State.DoubleDepotLeftKnockOffGold;
                     time.reset();
                     robot.Kill();
                 }
                 break;
 
-            case CraterCenter:
-                robot.TurnAbsolute(0,gyroangle );
-                if (gyroangle>=-2 && gyroangle<=2 && CurrentTime >= 1.0) {
-                    state = State.CenterKnockOffGold;
-                    time.reset();
-                    robot.Kill();
-                }
-                break;
-
-            case CraterRight:
-                robot.TurnAbsolute(-25,gyroangle);
-                if (gyroangle>=-27 && gyroangle<=-23 && CurrentTime >= 1.0){
-                    state = State.RightKnockOffGold;
-                    time.reset();
-                    robot.Kill();
-                }
-                break;
-
-            case LeftKnockOffGold:
-                robot.Forward(1, 35);
+            case DoubleDepotLeftKnockOffGold:
+                robot.Forward(1, 52);
                 robot.Intake.setPower(1);
-                if (robot.DriveDone(35)) {
+                if (robot.DriveDone(52)) {
+                    state = State.DoubleDepotLeftTurn1;
                     robot.Intake.setPower(0);
-                    state = State.LeftTurn1 ;
-                    time.reset();
-                    robot.Kill();
-                }
-                break;
-            /** This State makes the robot drive forward to knock off the gold while the intake is going inward so the gold doesn't get in the way **/
-
-            case LeftTurn1:
-                robot.TurnAbsolute(90, gyroangle);
-                if (gyroangle >= 88 && gyroangle <= 92 && CurrentTime >= 5.0) {
-                    state = State.LeftForward1;
                     time.reset();
                     robot.Kill();
                 }
                 break;
 
-            case LeftForward1:
-                robot.Forward(1, 35);
-                robot.Intake.setPower(1);
-                if (robot.DriveDone(35)) {
-                    robot.Intake.setPower(0);
-                    state = State.LeftTurn2;
+            case DoubleDepotLeftTurn1:
+                robot.TurnAbsolute(-45, gyroangle);
+                if (gyroangle >= -47 && gyroangle <= -43){
+                    state = State.DoubleDepotLeftForward2;
                     time.reset();
                     robot.Kill();
                 }
                 break;
 
-            case LeftTurn2:
-                robot.TurnAbsolute(110, gyroangle);
-                if (gyroangle >= 108 && gyroangle <= 112 && CurrentTime >= 2) {
-                    state = State.LeftForward2;
+            case DoubleDepotLeftForward2:
+                robot.Forward(1, 20);
+                if (robot.DriveDone(20)){
+                    state = State.DoubleLeftMarkerTurn1;
                     time.reset();
                     robot.Kill();
                 }
                 break;
 
-            case LeftForward2:
-                robot.Forward(1, 62);
-                robot.Intake.setPower(1);
-                if (robot.DriveDone(62)) {
+            case DoubleLeftMarkerTurn1:
+                robot.TurnAbsolute(0, gyroangle);
+                if (gyroangle >= -2 && gyroangle <= 2) {
                     state = State.LeftMarkerDrop;
                     time.reset();
                     robot.Kill();
                 }
                 break;
-            /**End of the Left version of the code**/
 
             case LeftMarkerDrop:
                 robot.ArmServo.setPosition(0.015);
                 robot.RightServo.setPosition(0);
                 if( robot.RightServo.getPosition()>=0){
-                    state = State.LeftCraterDelay;
+                    state = State.LeftDepotDelay;
                     time.reset();
                     robot.Kill();
                 }
                 break;
 
-            case LeftCraterDelay:
+            case LeftDepotDelay:
                 if (CurrentTime >= .5) {
-                    state = State.CraterLeftReverse;
+                    state = State.LeftMarkerTurn2;
                     time.reset();
                     robot.Kill();
                 }
                 break;
 
-            case CraterLeftReverse:
-                robot.Reverse(1, 96);
-                robot.Intake.setPower(0);
-                if (robot.DriveDone(96)) {
-                    robot.Intake.setPower(0);
-                    state = State.Stop;
+            case LeftMarkerTurn2:
+                robot.TurnAbsolute(-135, gyroangle);
+                if (gyroangle >= -133 && gyroangle <= -137) {
+                    state = State.DoubleDepotLeftForward3;
                     time.reset();
                     robot.Kill();
                 }
                 break;
 
-            case CenterKnockOffGold:
-                robot.Forward(1, 35);
-                robot.Intake.setPower(1);
-                if (robot.DriveDone(35)) {
-                    robot.Intake.setPower(0);
-                    state = State.CenterReverse;
+            case DoubleDepotLeftForward3:
+                robot.Reverse(1, 45);
+                if (robot.DriveDone(45)) {
+                    state = State.DepotStop;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+            /**End of the Left version of auto**/
+
+            case DepotCenter:
+                robot.TurnAbsolute(0, gyroangle);
+                if (gyroangle >= -2 && gyroangle <= 2) {
+                    state = State.DepotCenterKnockOffGold;
                     time.reset();
                     robot.Kill();
                 }
                 break;
 
-            case CenterReverse:
-                robot.Reverse(1, 12);
-                robot.Intake.setPower(1);
-                if (robot.DriveDone(12)) {
-                    robot.Intake.setPower(0);
-                    state = State.CenterTurn1;
-                    time.reset();
-                    robot.Kill();
-                }
-                break;
-
-            case CenterTurn1:
-                robot.TurnAbsolute(90, gyroangle);
-                if (gyroangle >= 88 && gyroangle <= 92 && CurrentTime >= 1) {
-                    state = State.CenterForward1;
-                    time.reset();
-                    robot.Kill();
-                }
-                break;
-
-            case CenterForward1:
+            case DepotCenterKnockOffGold:
                 robot.Forward(1, 60);
+                robot.Intake.setPower(1);
                 if (robot.DriveDone(60)) {
-                    state = State.CenterTurn2;
-                    time.reset();
-                    robot.Kill();
-                }
-                break;
-
-            case CenterTurn2:
-                robot.TurnAbsolute(135, gyroangle);
-                if (gyroangle >= 133 && gyroangle <= 137 && CurrentTime >= 1) {
-                    state = State.CenterForward2;
-                    time.reset();
-                    robot.Kill();
-                }
-                break;
-
-            case CenterForward2:
-                robot.Forward(1, 40);
-                if (robot.DriveDone(40)) {
+                    robot.Intake.setPower(0);
                     state = State.CenterMarkerDrop;
                     time.reset();
                     robot.Kill();
                 }
                 break;
-                /**End of the Center version of the code**/
 
             case CenterMarkerDrop:
                 robot.ArmServo.setPosition(0.015);
@@ -343,132 +270,168 @@ public class CraterSample extends OpMode {
                 break;
 
             case CenterDepotDelay:
+                robot.RightServo.setPosition(0.5);
                 if (CurrentTime >= .5) {
-                    state = State.CraterCenterReverse2;
+                    state = State.DepotCenterReverse;
                     time.reset();
                     robot.Kill();
                 }
                 break;
 
-            case CraterCenterReverse2:
-                robot.Reverse(1, 87);
+            case DepotCenterReverse:
+                robot.Reverse(1, 7);
                 robot.Intake.setPower(1);
-                if (robot.DriveDone(87)) {
+                if (robot.DriveDone(7)) {
                     robot.Intake.setPower(0);
-                    state = State.Stop;
+                    state = State.DepotCenterTurn1;
                     time.reset();
                     robot.Kill();
                 }
                 break;
 
-            case RightKnockOffGold:
-                robot.Forward(1, 35);
-                robot.Intake.setPower(1);
-                if (robot.DriveDone(35)) {
-                    robot.Intake.setPower(0);
-                    state = State.RightReverse1;
-                    time.reset();
-                    robot.Kill();
-                }
-                break;
-
-            case RightReverse1:
-                robot.Reverse(1, 14);
-                robot.Intake.setPower(1);
-                if (robot.DriveDone(14)) {
-                    robot.Intake.setPower(0);
-                    state = State.RightTurn1;
-                    time.reset();
-                    robot.Kill();
-                }
-                break;
-
-            case RightTurn1:
+            case DepotCenterTurn1:
                 robot.TurnAbsolute(90, gyroangle);
-                if (gyroangle >= 88 && gyroangle <= 92 && CurrentTime >= 1) {
-                    state = State.RightForward1;
+                if (gyroangle >= 88 && gyroangle <= 92){
+                    state = State.DepotCenterForward1;
                     time.reset();
                     robot.Kill();
                 }
                 break;
 
-            case RightForward1:
-                robot.Forward(1, 69);
-                if (robot.DriveDone(69)) {
-                    state = State.RightTurn2;
+            case DepotCenterForward1:
+                robot.Forward(1, 25);
+                if (robot.DriveDone(25)){
+                    state = State.DepotCenterTurn2;
                     time.reset();
                     robot.Kill();
                 }
                 break;
 
-            case RightTurn2:
-                robot.TurnAbsolute(135, gyroangle);
-                if (gyroangle >= 133 && gyroangle <= 135 && CurrentTime >= 1) {
-                    state = State.RightForward2;
+            case DepotCenterTurn2:
+                robot.TurnAbsolute(133, gyroangle);
+                if (gyroangle >= 131 && gyroangle <= 135){
+                    state = State.DepotCenterForward2;
                     time.reset();
                     robot.Kill();
                 }
                 break;
 
-            case RightForward2:
-                robot.Forward(1, 45);
-                if (robot.DriveDone(45)) {
+            case DepotCenterForward2:
+                robot.Forward(1, 60);
+                if (robot.DriveDone(60)){
+                    state = State.DepotStop;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+            /**End of the Center version of auto**/
+
+            case DepotRight:
+                robot.TurnAbsolute(-25, gyroangle);
+                if (gyroangle >= -27 && gyroangle <= -23) {
+                    state = State.DepotRightKnockOffGold;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+
+            case DepotRightKnockOffGold:
+                robot.Forward(1, 52);
+                robot.Intake.setPower(1);
+                if (robot.DriveDone(52)) {
+                    state = State.DepotRightTurn1;
+                    robot.Intake.setPower(0);
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+
+            case DepotRightTurn1:
+                robot.TurnAbsolute(43, gyroangle);
+                if (gyroangle >= 41 && gyroangle <= 45){
+                    state = State.DepotRightForward2;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+
+            case DepotRightForward2:
+                robot.Forward(1, 20);
+                if (robot.DriveDone(20)){
                     state = State.RightMarkerDrop;
                     time.reset();
                     robot.Kill();
                 }
                 break;
-             /**End of the Right version of the code**/
 
             case RightMarkerDrop:
                 robot.ArmServo.setPosition(0.015);
                 robot.RightServo.setPosition(0);
                 if( robot.RightServo.getPosition()>=0){
-                    state = State.RightDelay;
+                    state = State.RightDepotDelay;
                     time.reset();
                     robot.Kill();
                 }
                 break;
 
-            case RightDelay:
+            case RightDepotDelay:
                 if (CurrentTime >= .5) {
-                    state = State.RightReverse2;
+                    state = State.DepotRightTurn2;
                     time.reset();
                     robot.Kill();
                 }
                 break;
 
-            case RightTurn3:
-                robot.TurnAbsolute(135, gyroangle);
-                if (gyroangle >= 133 && gyroangle <= 137 && CurrentTime >= 1) {
-                    state = State.RightForward2;
+            case DepotRightTurn2:
+                robot.TurnAbsolute(90, gyroangle);
+                if (gyroangle >= 88 && gyroangle <= 92) {
+                    state = State.DepotRightForward3;
                     time.reset();
                     robot.Kill();
                 }
                 break;
 
-            case RightReverse2:
-                robot.Reverse(1, 96);
-                robot.Intake.setPower(1);
-                if (robot.DriveDone(96)) {
-                    robot.Intake.setPower(0);
-                    state = State.Stop;
+            case DepotRightForward3:
+                robot.Forward(1, 15);
+                if (robot.DriveDone(15)){
+                    state = State.DepotRightTurn3;
                     time.reset();
                     robot.Kill();
                 }
                 break;
 
-            case Stop:
+            case DepotRightTurn3:
+                robot.TurnAbsolute(133, gyroangle);
+                if (gyroangle >= 131 && gyroangle <= 135) {
+                    state = State.DepotRightForward4;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+
+            case DepotRightForward4:
+                robot.Forward(1, 65);
+                if (robot.DriveDone(65)){
+                    state = State.DepotStop;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+
+            /**End of the Right version of auto**/
+
+            case DepotStop:
                 time.reset();
                 robot.Kill();
                 break;
         }
     }
-    String formatAngle (AngleUnit angleUnit,double angle){
+
+    String formatAngle(AngleUnit angleUnit, double angle) {
         return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
     }
 
-    String formatDegrees ( double degrees){
+    String formatDegrees(double degrees) {
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
 }
