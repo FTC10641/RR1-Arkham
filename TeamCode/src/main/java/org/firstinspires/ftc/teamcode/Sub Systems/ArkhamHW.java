@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -17,9 +18,9 @@ public class ArkhamHW {
     public DcMotor Intake  =  null;
     public DcMotor LiftMotor = null;
     public DcMotor LiftMotor2 = null;
-    public Servo LeftSorterServo = null;
-    public Servo RightSorterServo = null;
+    public Servo RightServo = null;
     public Servo ArmServo = null;
+    public Servo BackServo = null;
     public DigitalChannel TopSwitch = null;
     public DigitalChannel BottomSwitch = null;
 
@@ -54,9 +55,9 @@ public class ArkhamHW {
         hwMap = ahwMap;
 
 
-        LeftSorterServo = ahwMap.servo.get("ls");
-        RightSorterServo = ahwMap.servo.get("rs");
+        RightServo = ahwMap.servo.get("rs");
         ArmServo = ahwMap.servo.get("as");
+        BackServo = ahwMap.servo.get("bs");
 
 
 
@@ -72,6 +73,8 @@ public class ArkhamHW {
         LiftMotor2 = ahwMap.get(DcMotor.class, "l2");
         TopSwitch = ahwMap.get(DigitalChannel.class,"t");
         BottomSwitch = ahwMap.get(DigitalChannel.class,"b");
+
+
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         LeftFrontMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -164,7 +167,7 @@ public class ArkhamHW {
         RightRearMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         double Error   = heading - target;
-        double Kp = 0.02;
+        double Kp = 0.017;
         double LFPower;
         double LRPower;
         double RFPower;
@@ -201,7 +204,7 @@ public class ArkhamHW {
             RightRearMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             double Error   = heading - target;
-            double Kp = 0.001;
+            double Kp = 0.017;
             double LFPower;
             double LRPower;
             double RFPower;

@@ -31,3 +31,4 @@ public class ArkhamSensors extends ArkhamHW {
         imu.initialize(parameters);
     }
 }
+/**This holds the information for all of our sensors, such as the imu and gyro**/
