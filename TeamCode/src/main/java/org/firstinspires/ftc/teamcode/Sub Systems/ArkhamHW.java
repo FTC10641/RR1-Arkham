@@ -134,10 +134,12 @@ public class ArkhamHW {
         LeftRearMotor.setTargetPosition((int) (-distance * COUNTS_PER_INCH));
         RightFrontMotor.setTargetPosition((int) (-distance * COUNTS_PER_INCH));
         RightRearMotor.setTargetPosition((int) (-distance * COUNTS_PER_INCH));
+
         LeftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         LeftRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         RightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         RightRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         LeftFrontMotor.setPower(-speed);
         LeftRearMotor.setPower(-speed);
         RightFrontMotor.setPower(-speed);
