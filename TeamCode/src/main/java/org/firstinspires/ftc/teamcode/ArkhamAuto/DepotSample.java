@@ -28,11 +28,11 @@ public class DepotSample extends OpMode {
         enum State {
             DepotDetach, DepotDriveOff, DepotLiftDown, DepotRight, DepotLeft, DepotCenter,
             DepotCenterKnockOffGold, DepotCenterReverse, DepotSample, RightDepotDelay,
-            DepotRightKnockOffGold, DepotRightTurn1, DepotRightForward2, DepotRightReverse,
-            DepotLeftKnockOffGold, DepotReverse, RightMarkerDrop, LeftMarkerDrop, CenterMarkerDrop,
+            DepotRightKnockOffGold, DepotRightTurn1, DepotRightForward2,
+            DepotLeftKnockOffGold, RightMarkerDrop, LeftMarkerDrop, CenterMarkerDrop,
             CenterDepotDelay, DepotCenterTurn1, DepotCenterForward1, DepotCenterTurn2, DepotCenterForward2,
-            DepotLeftTurn1, DepotLeftForward2, LeftDepotDelay, DepotLeftReverse, DepotRightReverse2, DepotCenterReverse2,
-            LeftMarkerTurn1, LeftMarkerTurn2, DepotRightTurn2, DepotRightForward3, DepotRightTurn3, DepotRightForward4, DepotStop
+            DepotLeftTurn1, DepotLeftForward2, LeftDepotDelay, DepotLeftReverse, LeftMarkerTurn1,
+            LeftMarkerTurn2, DepotRightTurn2, DepotRightForward3, DepotRightTurn3, DepotRightForward4, LeftMarkerTurn3, DepotLeftReverse2, DepotStop
         }
 
         DepotSample.State state;
@@ -155,8 +155,8 @@ public class DepotSample extends OpMode {
                     break;
 
                 case DepotLeft:
-                    robot.TurnAbsolute(25, gyroangle);
-                    if (gyroangle >= 23 && gyroangle <= 27) {
+                    robot.TurnAbsolute(21, gyroangle);
+                    if (gyroangle >= 19 && gyroangle <= 23 && CurrentTime >= 2) {
                         state = State.DepotLeftKnockOffGold;
                         time.reset();
                         robot.Kill();
@@ -164,9 +164,9 @@ public class DepotSample extends OpMode {
                     break;
 
                 case DepotLeftKnockOffGold:
-                    robot.Forward(1, 52);
+                    robot.Forward(1, 55);
                     robot.Intake.setPower(1);
-                    if (robot.DriveDone(52)) {
+                    if (robot.DriveDone(55)) {
                         state = State.DepotLeftTurn1;
                         robot.Intake.setPower(0);
                         time.reset();
@@ -176,7 +176,7 @@ public class DepotSample extends OpMode {
 
                 case DepotLeftTurn1:
                     robot.TurnAbsolute(-45, gyroangle);
-                    if (gyroangle >= -47 && gyroangle <= -43){
+                    if (gyroangle >= -47 && gyroangle <= -43 && CurrentTime >= 2){
                         state = State.DepotLeftForward2;
                         time.reset();
                         robot.Kill();
@@ -184,8 +184,8 @@ public class DepotSample extends OpMode {
                     break;
 
                 case DepotLeftForward2:
-                    robot.Forward(1, 20);
-                    if (robot.DriveDone(20)){
+                    robot.Forward(1, 23);
+                    if (robot.DriveDone(23)){
                         state = State.LeftMarkerTurn1;
                         time.reset();
                         robot.Kill();
@@ -194,7 +194,7 @@ public class DepotSample extends OpMode {
 
                 case LeftMarkerTurn1:
                     robot.TurnAbsolute(0, gyroangle);
-                    if (gyroangle >= -2 && gyroangle <= 2) {
+                    if (gyroangle >= -2 && gyroangle <= 2 && CurrentTime >= 2) {
                         state = State.LeftMarkerDrop;
                         time.reset();
                         robot.Kill();
@@ -220,8 +220,9 @@ public class DepotSample extends OpMode {
                     break;
 
                 case LeftMarkerTurn2:
-                    robot.TurnAbsolute(-45, gyroangle);
-                    if (gyroangle >= -47 && gyroangle <= -43) {
+                    robot.TurnAbsolute(-55, gyroangle);
+                    if (gyroangle >= -57 && gyroangle <= -53 && CurrentTime >= 2) {
+                        robot.RightServo.setPosition(0.85);
                         state = State.DepotLeftReverse;
                         time.reset();
                         robot.Kill();
@@ -229,9 +230,30 @@ public class DepotSample extends OpMode {
                     break;
 
                 case DepotLeftReverse:
-                    robot.Reverse(1, 87);
+                    robot.Reverse(1, 20);
                     robot.Intake.setPower(1);
-                    if (robot.DriveDone(87)) {
+                    if (robot.DriveDone(20)) {
+                        robot.Intake.setPower(0);
+                        state = State.LeftMarkerTurn3;
+                        time.reset();
+                        robot.Kill();
+                    }
+                    break;
+
+                case LeftMarkerTurn3:
+                    robot.TurnAbsolute(-45, gyroangle);
+                    if (gyroangle >= -47 && gyroangle <= -43 && CurrentTime >= 2) {
+                        robot.RightServo.setPosition(0.85);
+                        state = State.DepotLeftReverse2;
+                        time.reset();
+                        robot.Kill();
+                    }
+                    break;
+
+                case DepotLeftReverse2:
+                    robot.Reverse(1, 70);
+                    robot.Intake.setPower(1);
+                    if (robot.DriveDone(70)) {
                         robot.Intake.setPower(0);
                         state = State.DepotStop;
                         time.reset();
@@ -242,7 +264,7 @@ public class DepotSample extends OpMode {
 
                 case DepotCenter:
                     robot.TurnAbsolute(0, gyroangle);
-                    if (gyroangle >= -2 && gyroangle <= 2) {
+                    if (gyroangle >= -2 && gyroangle <= 2 && CurrentTime >= 2) {
                         state = State.DepotCenterKnockOffGold;
                         time.reset();
                         robot.Kill();
@@ -280,10 +302,11 @@ public class DepotSample extends OpMode {
                     break;
 
                 case DepotCenterReverse:
-                    robot.Reverse(1, 7);
+                    robot.Reverse(1, 5);
                     robot.Intake.setPower(1);
-                    if (robot.DriveDone(7)) {
+                    if (robot.DriveDone(5)) {
                         robot.Intake.setPower(0);
+                        robot.RightServo.setPosition(0.85);
                         state = State.DepotCenterTurn1;
                         time.reset();
                         robot.Kill();
@@ -292,7 +315,7 @@ public class DepotSample extends OpMode {
 
                 case DepotCenterTurn1:
                     robot.TurnAbsolute(90, gyroangle);
-                    if (gyroangle >= 88 && gyroangle <= 92){
+                    if (gyroangle >= 88 && gyroangle <= 92 && CurrentTime >= 2){
                         state = State.DepotCenterForward1;
                         time.reset();
                         robot.Kill();
@@ -300,8 +323,8 @@ public class DepotSample extends OpMode {
                     break;
 
                 case DepotCenterForward1:
-                    robot.Forward(1, 25);
-                    if (robot.DriveDone(25)){
+                    robot.Forward(1, 23);
+                    if (robot.DriveDone(23)){
                         state = State.DepotCenterTurn2;
                         time.reset();
                         robot.Kill();
@@ -309,8 +332,8 @@ public class DepotSample extends OpMode {
                     break;
 
                 case DepotCenterTurn2:
-                    robot.TurnAbsolute(133, gyroangle);
-                    if (gyroangle >= 131 && gyroangle <= 135){
+                    robot.TurnAbsolute(130, gyroangle);
+                    if (gyroangle >= 128 && gyroangle <= 132 && CurrentTime >= 2){
                         state = State.DepotCenterForward2;
                         time.reset();
                         robot.Kill();
@@ -319,7 +342,9 @@ public class DepotSample extends OpMode {
 
                 case DepotCenterForward2:
                     robot.Forward(1, 60);
+                    robot.Intake.setPower(1);
                     if (robot.DriveDone(60)){
+                        robot.Intake.setPower(0);
                         state = State.DepotStop;
                         time.reset();
                         robot.Kill();
@@ -328,8 +353,8 @@ public class DepotSample extends OpMode {
                 /**End of the Center version of auto**/
 
                 case DepotRight:
-                    robot.TurnAbsolute(-25, gyroangle);
-                    if (gyroangle >= -27 && gyroangle <= -23) {
+                    robot.TurnAbsolute(-23, gyroangle);
+                    if (gyroangle >= -25 && gyroangle <= -21 && CurrentTime >= 2) {
                         state = State.DepotRightKnockOffGold;
                         time.reset();
                         robot.Kill();
@@ -348,8 +373,8 @@ public class DepotSample extends OpMode {
                     break;
 
                 case DepotRightTurn1:
-                    robot.TurnAbsolute(43, gyroangle);
-                    if (gyroangle >= 41 && gyroangle <= 45){
+                    robot.TurnAbsolute(45, gyroangle);
+                    if (gyroangle >= 43 && gyroangle <= 47 && CurrentTime >= 2){
                         state = State.DepotRightForward2;
                         time.reset();
                         robot.Kill();
@@ -385,7 +410,8 @@ public class DepotSample extends OpMode {
 
                 case DepotRightTurn2:
                     robot.TurnAbsolute(90, gyroangle);
-                    if (gyroangle >= 88 && gyroangle <= 92) {
+                    if (gyroangle >= 88 && gyroangle <= 92 && CurrentTime >= 2) {
+                        robot.RightServo.setPosition(0.85);
                         state = State.DepotRightForward3;
                         time.reset();
                         robot.Kill();
@@ -393,8 +419,8 @@ public class DepotSample extends OpMode {
                     break;
 
                 case DepotRightForward3:
-                    robot.Forward(1, 15);
-                    if (robot.DriveDone(15)){
+                    robot.Forward(1, 20);
+                    if (robot.DriveDone(20)){
                         state = State.DepotRightTurn3;
                         time.reset();
                         robot.Kill();
@@ -402,8 +428,8 @@ public class DepotSample extends OpMode {
                     break;
 
                 case DepotRightTurn3:
-                    robot.TurnAbsolute(133, gyroangle);
-                    if (gyroangle >= 131 && gyroangle <= 135) {
+                    robot.TurnAbsolute(135, gyroangle);
+                    if (gyroangle >= 133 && gyroangle <= 137 && CurrentTime >= 2) {
                         state = State.DepotRightForward4;
                         time.reset();
                         robot.Kill();
@@ -411,14 +437,15 @@ public class DepotSample extends OpMode {
                     break;
 
                 case DepotRightForward4:
-                    robot.Forward(1, 65);
-                    if (robot.DriveDone(65)){
+                    robot.Forward(1, 69);
+                    robot.Intake.setPower(1);
+                    if (robot.DriveDone(69)){
+                        robot.Intake.setPower(0);
                         state = State.DepotStop;
                         time.reset();
                         robot.Kill();
                     }
                     break;
-
                 /**End of the Right version of auto**/
 
                 case DepotStop:
