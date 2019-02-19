@@ -32,7 +32,8 @@ public class DepotSample extends OpMode {
             DepotLeftKnockOffGold, RightMarkerDrop, LeftMarkerDrop, CenterMarkerDrop,
             CenterDepotDelay, DepotCenterTurn1, DepotCenterForward1, DepotCenterTurn2, DepotCenterForward2,
             DepotLeftTurn1, DepotLeftForward2, LeftDepotDelay, DepotLeftReverse, LeftMarkerTurn1,
-            LeftMarkerTurn2, DepotRightTurn2, DepotRightForward3, DepotRightTurn3, DepotRightForward4, LeftMarkerTurn3, DepotLeftReverse2, DepotStop
+            LeftMarkerTurn2, DepotRightTurn2, DepotRightForward3, DepotRightTurn3, DepotRightForward4, LeftMarkerTurn3,
+            DepotLeftReverse2, DepotStop
         }
 
         DepotSample.State state;
