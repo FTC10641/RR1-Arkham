@@ -33,7 +33,8 @@ public class DoubleCraterSample extends OpMode {
         DoubleCraterLeftTurn3, DoubleCraterLeftForward3, DoubleCraterLeftTurn4,
         DoubleCraterLeftForward4, DoubleCraterLeftTurn5, DoubleCraterCommonTurn1,
         DoubleCraterCommonForward1, DoubleCraterCommonReverse1, DoubleCraterCommonMarkerDrop,
-        DoubleCraterCommonDelay, DoubleCraterLeftMarkerDrop, DoubleCraterLeftDelay, DoubleCraterDetach, Stop, CenterKnockOffGold, DoubleCraterCenterTurn1, DoubleCraterCenterForward1,
+        DoubleCraterCommonDelay, DoubleCraterLeftMarkerDrop, DoubleCraterLeftDelay, DoubleCraterDetach,
+        Stop, CenterKnockOffGold, DoubleCraterCenterTurn1, DoubleCraterCenterForward1,
     }
 
     State state;
@@ -132,7 +133,8 @@ public class DoubleCraterSample extends OpMode {
                                     silverMineral2X = (int) recognition.getLeft();
                                 }
                             }
-                            if ((goldMineralX != -1 && silverMineral1X != -1) || (goldMineralX != -1 && silverMineral2X != -1) || (silverMineral1X != -1 && silverMineral2X != -1)) {
+                            if ((goldMineralX != -1 && silverMineral1X != -1) || (goldMineralX != -1 && silverMineral2X != -1)
+                                || (silverMineral1X != -1 && silverMineral2X != -1)) {
                                 if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
                                     telemetry.addData("Gold Mineral Position", "Left");
                                     state = State.DoubleCraterLeft;
