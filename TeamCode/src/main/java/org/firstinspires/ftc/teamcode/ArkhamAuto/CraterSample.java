@@ -37,7 +37,8 @@ public class CraterSample extends OpMode {
         CraterLeft, CraterCenter, CraterRight, CraterSample, LeftMarkerDrop,
         CenterMarkerDrop, CenterDepotDelay, LeftCraterDelay, CraterLeftReverse,
         RightForward1, RightMarkerDrop, RightDelay, RightReverse2,
-        CraterCenterReverse2, RightTurn3, LeftTurn3, CenterTurn3, CenterTurn4, CenterForward3, LeftTurn4, LeftForward3, RightTurn4, RightForward3, Stop
+        CraterCenterReverse2, RightTurn3, LeftTurn3, CenterTurn3, CenterTurn4,
+        CenterForward3, LeftTurn4, LeftForward3, RightTurn4,RightForward3, Stop
     }
 
     State state;
@@ -138,7 +139,8 @@ public class CraterSample extends OpMode {
                                     silverMineral2X = (int) recognition.getLeft();
                                 }
                             }
-                            if ((goldMineralX != -1 && silverMineral1X != -1) || (goldMineralX != -1 && silverMineral2X != -1) || (silverMineral1X != -1 && silverMineral2X != -1)) {
+                            if ((goldMineralX != -1 && silverMineral1X != -1) || (goldMineralX != -1 && silverMineral2X != -1)
+                                || (silverMineral1X != -1 && silverMineral2X != -1)) {
                                 if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
                                     telemetry.addData("Gold Mineral Position", "Left");
                                     state = State.CraterLeft;
