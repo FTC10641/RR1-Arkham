@@ -32,9 +32,10 @@ public class DoubleDepotSample2 extends OpMode {
         DoubleDepotStop, DoubleDepotRightTurn1, DoubleDepotRightForward2, DoubleDepotRightMarkerDrop, DoubleDepotRightDelay,
         DoubleDepotRightTurn2, DoubleDepotRightForward3, DoubleDepotRightTurn3, DoubleDepotRightForward4, DoubleDepotCenterForward2,
         DoubleDepotCenterTurn2, DoubleDepotCenterForward1, DoubleDepotCenterTurn1, DoubleDepotCenterReverse, DoubleCenterDepotDelay,
-        DoubleCenterMarkerDrop, DoubleDepotCenterKnockOffGold, DoubleDepotLeftMarkerTurn2, DoubleDepotLeftDelay, DoubleDepotLeftMarkerDrop,
-        DoubleDepotLeftTurn2, DoubleDepotLeftForward4, DoubleDepotLeftTurn3, DoubleDepotLeftForward5, DoubleDepotLeftTurn4, DoubleDepotLeftForward6,
-        DoubleDepotCenterTurn3, DoubleDepotCenterForward3, DoubleDepotCenterTurn4, DoubleDepotCenterForward4, DoubleDepotLeftReverse1, DoubleDepotLeftReverse2, DoubleDepotDriveOff
+        DoubleCenterMarkerDrop, DoubleDepotCenterKnockOffGold, DoubleDepotLeftMarkerTurn2, DoubleDepotLeftDelay,
+        DoubleDepotLeftMarkerDrop, DoubleDepotLeftTurn2, DoubleDepotLeftForward4, DoubleDepotLeftTurn3, DoubleDepotLeftForward5,
+        DoubleDepotLeftTurn4, DoubleDepotLeftForward6, DoubleDepotCenterTurn3, DoubleDepotCenterForward3, DoubleDepotCenterTurn4,
+        DoubleDepotCenterForward4, DoubleDepotLeftReverse1, DoubleDepotLeftReverse2, DoubleDepotDriveOff
     }
 
     State state;
@@ -130,7 +131,8 @@ public class DoubleDepotSample2 extends OpMode {
                                     silverMineral2X = (int) recognition.getLeft();
                                 }
                             }
-                            if ((goldMineralX != -1 && silverMineral1X != -1) || (goldMineralX != -1 && silverMineral2X != -1) || (silverMineral1X != -1 && silverMineral2X != -1)) {
+                            if ((goldMineralX != -1 && silverMineral1X != -1) || (goldMineralX != -1 && silverMineral2X != -1)
+                                || (silverMineral1X != -1 && silverMineral2X != -1)) {
                                 if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
                                     telemetry.addData("Gold Mineral Position", "Left");
                                     state = State.DoubleDepotLeft;
