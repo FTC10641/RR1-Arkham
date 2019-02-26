@@ -31,10 +31,17 @@ public class DoubleCraterSample extends OpMode {
         DoubleCraterRight, DoubleCraterLeft, LeftKnockOffGold, DoubleCraterLeftTurn1,
         DoubleCraterLeftForward1, DoubleCraterLeftTurn2, DoubleCraterLeftForward2,
         DoubleCraterLeftTurn3, DoubleCraterLeftForward3, DoubleCraterLeftTurn4,
-        DoubleCraterLeftForward4, DoubleCraterLeftTurn5, DoubleCraterCommonTurn1,
-        DoubleCraterCommonForward1, DoubleCraterCommonReverse1, DoubleCraterCommonMarkerDrop,
-        DoubleCraterCommonDelay, DoubleCraterLeftMarkerDrop, DoubleCraterLeftDelay, DoubleCraterDetach,
-        Stop, CenterKnockOffGold, DoubleCraterCenterTurn1, DoubleCraterCenterForward1,
+        DoubleCraterLeftForward4, DoubleCraterLeftTurn5, DoubleCraterLeftMarkerDrop,
+        DoubleCraterLeftDelay, DoubleCraterDetach, DoubleCraterCenterTurn1,
+        DoubleCraterCenterForward1, DoubleCraterCenterKnockOffGold, DoubleCraterCenterReverse,
+        DoubleCraterCenterTurn2, DoubleCraterCenterForward2, DoubleCraterCenterTurn3,
+        DoubleCraterCenterForward3, DoubleCraterCenterMarkerDrop, DoubleCraterCenterDepotDelay,
+        DoubleCraterCenterTurn4, DoubleCraterCenterForward4, DoubleCraterCenterTurn5,
+        DoubleCraterCenterForward5, DoubleCraterRightKnockOffGold, DoubleCraterRightReverse1,
+        DoubleCraterRightTurn1, DoubleCraterRightForward1, DoubleCraterRightTurn2,
+        DoubleCraterRightForward2, DoubleCraterRightTurn3, DoubleCraterRightForward3,
+        DoubleCraterRightMarkerDrop, DoubleCraterRightDelay, DoubleCraterRightTurn4,
+        DoubleCraterRightForward4, DoubleCraterRightTurn5, DoubleCraterRightForward5, Stop
     }
 
     State state;
@@ -50,9 +57,9 @@ public class DoubleCraterSample extends OpMode {
         vision.initVision(hardwareMap);
         state = State.DoubleCraterDetach;
         ElapsedTime runtime = new ElapsedTime();
-        robot.LiftMotor.setPower(.09);
-        robot.LiftMotor2.setPower(.09);
-        robot.RightServo.setPosition(0.85);
+        robot.LiftMotor.setPower(.2);
+        robot.LiftMotor2.setPower(.2);
+        robot.RightServo.setPosition(0.95);
         robot.ArmServo.setPosition(0.015);
     }
 
@@ -133,8 +140,7 @@ public class DoubleCraterSample extends OpMode {
                                     silverMineral2X = (int) recognition.getLeft();
                                 }
                             }
-                            if ((goldMineralX != -1 && silverMineral1X != -1) || (goldMineralX != -1 && silverMineral2X != -1)
-                                || (silverMineral1X != -1 && silverMineral2X != -1)) {
+                            if ((goldMineralX != -1 && silverMineral1X != -1) || (goldMineralX != -1 && silverMineral2X != -1) || (silverMineral1X != -1 && silverMineral2X != -1)) {
                                 if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
                                     telemetry.addData("Gold Mineral Position", "Left");
                                     state = State.DoubleCraterLeft;
@@ -231,7 +237,7 @@ public class DoubleCraterSample extends OpMode {
 
             case DoubleCraterLeftDelay:
                 if (CurrentTime >= .5) {
-                    robot.RightServo.setPosition(0.85);
+                    robot.RightServo.setPosition(0.95);
                     state = State.DoubleCraterLeftTurn3;
                     time.reset();
                     robot.Kill();
@@ -239,9 +245,9 @@ public class DoubleCraterSample extends OpMode {
                 break;
 
             case DoubleCraterLeftTurn3:
-                robot.TurnAbsolute(-113,gyroangle);
-                if (gyroangle>=-115 && gyroangle<=-111 && CurrentTime >= 1){
-                    robot.RightServo.setPosition(0.85);
+                robot.TurnAbsolute(-67,gyroangle);
+                if (gyroangle>=-69 && gyroangle<=-65 && CurrentTime >= 1){
+                    robot.RightServo.setPosition(0.95);
                     state = State.DoubleCraterLeftForward3;
                     time.reset();
                     robot.Kill();
@@ -251,7 +257,7 @@ public class DoubleCraterSample extends OpMode {
             case DoubleCraterLeftForward3:
                 robot.Forward(1, 35);
                 if (robot.DriveDone(35)) {
-                    state = State.Stop;
+                    state = State.DoubleCraterLeftTurn4;
                     time.reset();
                     robot.Kill();
                 }
@@ -267,38 +273,50 @@ public class DoubleCraterSample extends OpMode {
                 break;
 
             case DoubleCraterLeftForward4:
-                robot.Forward(1, 25);
-                if (robot.DriveDone(25)) {
-                    state = State.DoubleCraterLeftTurn5;
+                robot.Forward(1, 80);
+                if (robot.DriveDone(80)) {
+                    state = State.Stop;
                     time.reset();
                     robot.Kill();
                 }
                 break;
             /**End of the Left version of the code**/
 
+
             case DoubleCraterCenter:
-                robot.TurnAbsolute(0,gyroangle);
-                if (gyroangle>=-2 && gyroangle<=2 && CurrentTime >= 1) {
-                    state = State.CenterKnockOffGold;
+                robot.TurnAbsolute(0,gyroangle );
+                if (gyroangle>=-2 && gyroangle<=2 && CurrentTime >= 1.0) {
+                    state = State.DoubleCraterCenterKnockOffGold;
                     time.reset();
                     robot.Kill();
                 }
                 break;
 
-            case CenterKnockOffGold:
-                robot.Forward(1, 40);
+            case DoubleCraterCenterKnockOffGold:
+                robot.Forward(1, 35);
                 robot.Intake.setPower(1);
-                if (robot.DriveDone(40)) {
+                if (robot.DriveDone(35)) {
                     robot.Intake.setPower(0);
-                    state = State.DoubleCraterCenterTurn1 ;
+                    state = State.DoubleCraterCenterReverse;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+
+            case DoubleCraterCenterReverse:
+                robot.Reverse(1, 10);
+                robot.Intake.setPower(1);
+                if (robot.DriveDone(10)) {
+                    robot.Intake.setPower(0);
+                    state = State.DoubleCraterCenterTurn1;
                     time.reset();
                     robot.Kill();
                 }
                 break;
 
             case DoubleCraterCenterTurn1:
-                robot.TurnAbsolute(90,gyroangle);
-                if (gyroangle>=88 && gyroangle<=-92 && CurrentTime >= 1){
+                robot.TurnAbsolute(90, gyroangle);
+                if (gyroangle >= 88 && gyroangle <= 92 && CurrentTime >= 2) {
                     state = State.DoubleCraterCenterForward1;
                     time.reset();
                     robot.Kill();
@@ -306,29 +324,257 @@ public class DoubleCraterSample extends OpMode {
                 break;
 
             case DoubleCraterCenterForward1:
-                robot.Forward(1, 40);
+                robot.Forward(1, 45);
                 robot.Intake.setPower(1);
-                if (robot.DriveDone(40)) {
+                if (robot.DriveDone(45)) {
                     robot.Intake.setPower(0);
-                    state = State.DoubleCraterCenterTurn1 ;
+                    state = State.DoubleCraterCenterTurn2;
                     time.reset();
                     robot.Kill();
                 }
                 break;
 
+            case DoubleCraterCenterTurn2:
+                robot.TurnAbsolute(120, gyroangle);
+                if (gyroangle >= 118 && gyroangle <= 122 && CurrentTime >= 1) {
+                    state = State.DoubleCraterCenterForward2;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
 
+            case DoubleCraterCenterForward2:
+                robot.Forward(1, 18);
+                robot.Intake.setPower(1);
+                if (robot.DriveDone(18)) {
+                    robot.Intake.setPower(0);
+                    state = State.DoubleCraterCenterTurn3;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+
+            case DoubleCraterCenterTurn3:
+                robot.TurnAbsolute(135, gyroangle);
+                if (gyroangle >= 133 && gyroangle <= 137 && CurrentTime >= 2) {
+                    state = State.DoubleCraterCenterForward3;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+
+            case DoubleCraterCenterForward3:
+                robot.Forward(1, 35);
+                robot.Intake.setPower(1);
+                if (robot.DriveDone(35)) {
+                    robot.Intake.setPower(0);
+                    state = State.DoubleCraterCenterMarkerDrop;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+
+            case DoubleCraterCenterMarkerDrop:
+                robot.ArmServo.setPosition(0.015);
+                robot.RightServo.setPosition(0);
+                if( robot.RightServo.getPosition()>=0){
+                    state = State.DoubleCraterCenterDepotDelay;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+
+            case DoubleCraterCenterDepotDelay:
+                if (CurrentTime >= .5) {
+                    state = State.DoubleCraterCenterTurn4;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+
+            case DoubleCraterCenterTurn4:
+                robot.TurnAbsolute(-90, gyroangle);
+                if (gyroangle >= -92 && gyroangle <= -88 && CurrentTime >= 2) {
+                    state = State.DoubleCraterCenterForward4;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+
+            case DoubleCraterCenterForward4:
+                robot.Forward(1, 35);
+                if (robot.DriveDone(35)) {
+                    state = State.DoubleCraterCenterTurn5;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+
+            case DoubleCraterCenterTurn5:
+                robot.TurnAbsolute(0,gyroangle);
+                if (gyroangle>=-2 && gyroangle<=2 && CurrentTime >= 1){
+                    state = State.DoubleCraterCenterForward5;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+
+            case DoubleCraterCenterForward5:
+                robot.Forward(1, 40);
+                if (robot.DriveDone(40)) {
+                    state = State.Stop;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
             /**End of the Center version of the code**/
+
 
             case DoubleCraterRight:
                 robot.TurnAbsolute(-25,gyroangle);
                 if (gyroangle>=-27 && gyroangle<=-23 && CurrentTime >= 1){
+                    state = State.DoubleCraterRightKnockOffGold;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+
+            case DoubleCraterRightKnockOffGold:
+                robot.Forward(1, 35);
+                robot.Intake.setPower(1);
+                if (robot.DriveDone(35)) {
+                    robot.Intake.setPower(0);
+                    state = State.DoubleCraterRightReverse1;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+
+            case DoubleCraterRightReverse1:
+                robot.Reverse(1, 12);
+                robot.Intake.setPower(1);
+                if (robot.DriveDone(12)) {
+                    robot.Intake.setPower(0);
+                    state = State.DoubleCraterRightTurn1;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+
+            case DoubleCraterRightTurn1:
+                robot.TurnAbsolute(90, gyroangle);
+                if (gyroangle >= 88 && gyroangle <= 92 && CurrentTime >= 2) {
+                    state = State.DoubleCraterRightForward1;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+
+            case DoubleCraterRightForward1:
+                robot.Forward(1,55);
+                robot.Intake.setPower(1);
+                if (robot.DriveDone(55)) {
+                    robot.Intake.setPower(0);
+                    state = State.DoubleCraterRightTurn2;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+
+            case DoubleCraterRightTurn2:
+                robot.TurnAbsolute(120, gyroangle);
+                if (gyroangle >= 118 && gyroangle <= 122 && CurrentTime >= 2) {
+                    state = State.DoubleCraterRightForward2;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+
+            case DoubleCraterRightForward2:
+                robot.Forward(1, 20);
+                robot.Intake.setPower(1);
+                if (robot.DriveDone(20)) {
+                    robot.Intake.setPower(0);
+                    state = State.DoubleCraterRightTurn3;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+
+            case DoubleCraterRightTurn3:
+                robot.TurnAbsolute(133, gyroangle);
+                if (gyroangle >= 131 && gyroangle <= 135 && CurrentTime >= 1) {
+                    state = State.DoubleCraterRightForward3;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+
+            case DoubleCraterRightForward3:
+                robot.Forward(1, 45);
+                robot.Intake.setPower(1);
+                if (robot.DriveDone(45)) {
+                    robot.Intake.setPower(0);
+                    state = State.DoubleCraterRightMarkerDrop;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+
+            case DoubleCraterRightMarkerDrop:
+                robot.ArmServo.setPosition(0.015);
+                robot.RightServo.setPosition(0);
+                if(robot.RightServo.getPosition()>=0){
+                    state = State.DoubleCraterRightDelay;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+
+            case DoubleCraterRightDelay:
+                if (CurrentTime >= .5) {
+                    state = State.DoubleCraterRightTurn4;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+
+            case DoubleCraterRightTurn4:
+                robot.TurnAbsolute(-67, gyroangle);
+                if (gyroangle >= -69 && gyroangle <= -65 && CurrentTime >= 1) {
+                    state = State.DoubleCraterRightForward4;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+
+            case DoubleCraterRightForward4:
+                robot.Forward(1, 35);
+                if (robot.DriveDone(35)) {
+                    state = State.DoubleCraterRightTurn5;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+
+            case DoubleCraterRightTurn5:
+                robot.TurnAbsolute(0, gyroangle);
+                if (gyroangle >= -2 && gyroangle <= 2 && CurrentTime >= 1) {
+                    state = State.DoubleCraterRightForward5;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+
+            case DoubleCraterRightForward5:
+                robot.Forward(1, 50);
+                if (robot.DriveDone(50)) {
                     state = State.Stop;
                     time.reset();
                     robot.Kill();
                 }
                 break;
             /**End of the Right version of the code**/
-
 
             case Stop:
                 time.reset();

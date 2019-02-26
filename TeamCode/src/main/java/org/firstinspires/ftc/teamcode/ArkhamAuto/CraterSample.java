@@ -38,7 +38,7 @@ public class CraterSample extends OpMode {
         CenterMarkerDrop, CenterDepotDelay, LeftCraterDelay, CraterLeftReverse,
         RightForward1, RightMarkerDrop, RightDelay, RightReverse2,
         CraterCenterReverse2, RightTurn3, LeftTurn3, CenterTurn3, CenterTurn4,
-        CenterForward3, LeftTurn4, LeftForward3, RightTurn4,RightForward3, Stop
+        CenterForward3, LeftTurn4, LeftForward3, RightTurn4, RightForward3, Stop
     }
 
     State state;
@@ -54,9 +54,9 @@ public class CraterSample extends OpMode {
         vision.initVision(hardwareMap);
         state = State.CraterDetach;
         ElapsedTime runtime = new ElapsedTime();
-        robot.LiftMotor.setPower(.09);
-        robot.LiftMotor2.setPower(.09);
-        robot.RightServo.setPosition(0.85);
+        robot.LiftMotor.setPower(.2);
+        robot.LiftMotor2.setPower(.2);
+        robot.RightServo.setPosition(0.95);
         robot.ArmServo.setPosition(0.015);
 
     }
@@ -139,8 +139,7 @@ public class CraterSample extends OpMode {
                                     silverMineral2X = (int) recognition.getLeft();
                                 }
                             }
-                            if ((goldMineralX != -1 && silverMineral1X != -1) || (goldMineralX != -1 && silverMineral2X != -1)
-                                || (silverMineral1X != -1 && silverMineral2X != -1)) {
+                            if ((goldMineralX != -1 && silverMineral1X != -1) || (goldMineralX != -1 && silverMineral2X != -1) || (silverMineral1X != -1 && silverMineral2X != -1)) {
                                 if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
                                     telemetry.addData("Gold Mineral Position", "Left");
                                     state = State.CraterLeft;
@@ -231,7 +230,7 @@ public class CraterSample extends OpMode {
 
             case LeftTurn3:
                 robot.TurnAbsolute(135, gyroangle);
-                if (gyroangle >= 133 && gyroangle <= 137 && CurrentTime >= 2) {
+                if (gyroangle >= 133 && gyroangle <= 137 && CurrentTime >= 1) {
                     state = State.LeftForward3;
                     time.reset();
                     robot.Kill();
@@ -268,8 +267,8 @@ public class CraterSample extends OpMode {
 
             case LeftTurn4:
                 robot.TurnAbsolute(135, gyroangle);
-                if (gyroangle >= 133 && gyroangle <= 137 && CurrentTime >= 2) {
-                    robot.RightServo.setPosition(0.85);
+                if (gyroangle >= 133 && gyroangle <= 137 && CurrentTime >= 1) {
+                    robot.RightServo.setPosition(0.95);
                     state = State.CraterLeftReverse;
                     time.reset();
                     robot.Kill();
@@ -277,9 +276,9 @@ public class CraterSample extends OpMode {
                 break;
 
             case CraterLeftReverse:
-                robot.Reverse(1, 86);
+                robot.Reverse(1, 88);
                 robot.Intake.setPower(0);
-                if (robot.DriveDone(86)) {
+                if (robot.DriveDone(88)) {
                     robot.Intake.setPower(0);
                     state = State.Stop;
                     time.reset();
@@ -322,7 +321,7 @@ public class CraterSample extends OpMode {
 
             case CenterTurn1:
                 robot.TurnAbsolute(90, gyroangle);
-                if (gyroangle >= 88 && gyroangle <= 92 && CurrentTime >= 2) {
+                if (gyroangle >= 88 && gyroangle <= 92 && CurrentTime >= 1) {
                     state = State.CenterForward1;
                     time.reset();
                     robot.Kill();
@@ -362,7 +361,7 @@ public class CraterSample extends OpMode {
 
             case CenterTurn3:
                 robot.TurnAbsolute(135, gyroangle);
-                if (gyroangle >= 133 && gyroangle <= 137 && CurrentTime >= 2) {
+                if (gyroangle >= 133 && gyroangle <= 137 && CurrentTime >= 1) {
                     state = State.CenterForward3;
                     time.reset();
                     robot.Kill();
@@ -400,8 +399,8 @@ public class CraterSample extends OpMode {
 
             case CenterTurn4:
                 robot.TurnAbsolute(135, gyroangle);
-                if (gyroangle >= 133 && gyroangle <= 137 && CurrentTime >= 2) {
-                    robot.RightServo.setPosition(0.85);
+                if (gyroangle >= 133 && gyroangle <= 137 && CurrentTime >= 1) {
+                    robot.RightServo.setPosition(0.95);
                     state = State.CraterCenterReverse2;
                     time.reset();
                     robot.Kill();
@@ -409,9 +408,9 @@ public class CraterSample extends OpMode {
                 break;
 
             case CraterCenterReverse2:
-                robot.Reverse(1, 75);
+                robot.Reverse(1, 77);
                 robot.Intake.setPower(1);
-                if (robot.DriveDone(75)) {
+                if (robot.DriveDone(77)) {
                     robot.Intake.setPower(0);
                     state = State.Stop;
                     time.reset();
@@ -453,7 +452,7 @@ public class CraterSample extends OpMode {
 
             case RightTurn1:
                 robot.TurnAbsolute(90, gyroangle);
-                if (gyroangle >= 88 && gyroangle <= 92 && CurrentTime >= 2) {
+                if (gyroangle >= 88 && gyroangle <= 92 && CurrentTime >= 1) {
                     state = State.RightForward1;
                     time.reset();
                     robot.Kill();
@@ -473,7 +472,7 @@ public class CraterSample extends OpMode {
 
             case RightTurn2:
                     robot.TurnAbsolute(120, gyroangle);
-                    if (gyroangle >= 118 && gyroangle <= 122 && CurrentTime >= 2) {
+                    if (gyroangle >= 118 && gyroangle <= 122 && CurrentTime >= 1) {
                         state = State.RightForward2;
                         time.reset();
                         robot.Kill();
@@ -523,7 +522,7 @@ public class CraterSample extends OpMode {
 
             case RightDelay:
                 if (CurrentTime >= .5) {
-                    state = State.RightTurn3;
+                    state = State.RightTurn4;
                     time.reset();
                     robot.Kill();
                 }
@@ -532,7 +531,7 @@ public class CraterSample extends OpMode {
             case RightTurn4:
                 robot.TurnAbsolute(133, gyroangle);
                 if (gyroangle >= 131 && gyroangle <= 135 && CurrentTime >= 1) {
-                    robot.RightServo.setPosition(0.85);
+                    robot.RightServo.setPosition(0.95);
                     state = State.RightReverse2;
                     time.reset();
                     robot.Kill();
@@ -540,9 +539,9 @@ public class CraterSample extends OpMode {
                 break;
 
             case RightReverse2:
-                robot.Reverse(1, 90);
+                robot.Reverse(1, 92);
                 robot.Intake.setPower(1);
-                if (robot.DriveDone(90)) {
+                if (robot.DriveDone(92)) {
                     robot.Intake.setPower(0);
                     state = State.Stop;
                     time.reset();

@@ -32,10 +32,9 @@ public class DoubleDepotSample2 extends OpMode {
         DoubleDepotStop, DoubleDepotRightTurn1, DoubleDepotRightForward2, DoubleDepotRightMarkerDrop, DoubleDepotRightDelay,
         DoubleDepotRightTurn2, DoubleDepotRightForward3, DoubleDepotRightTurn3, DoubleDepotRightForward4, DoubleDepotCenterForward2,
         DoubleDepotCenterTurn2, DoubleDepotCenterForward1, DoubleDepotCenterTurn1, DoubleDepotCenterReverse, DoubleCenterDepotDelay,
-        DoubleCenterMarkerDrop, DoubleDepotCenterKnockOffGold, DoubleDepotLeftMarkerTurn2, DoubleDepotLeftDelay,
-        DoubleDepotLeftMarkerDrop, DoubleDepotLeftTurn2, DoubleDepotLeftForward4, DoubleDepotLeftTurn3, DoubleDepotLeftForward5,
-        DoubleDepotLeftTurn4, DoubleDepotLeftForward6, DoubleDepotCenterTurn3, DoubleDepotCenterForward3, DoubleDepotCenterTurn4,
-        DoubleDepotCenterForward4, DoubleDepotLeftReverse1, DoubleDepotLeftReverse2, DoubleDepotDriveOff
+        DoubleCenterMarkerDrop, DoubleDepotCenterKnockOffGold, DoubleDepotLeftMarkerTurn2, DoubleDepotLeftDelay, DoubleDepotLeftMarkerDrop,
+        DoubleDepotLeftTurn2, DoubleDepotLeftForward4, DoubleDepotLeftTurn3, DoubleDepotLeftForward5, DoubleDepotLeftTurn4, DoubleDepotLeftForward6,
+        DoubleDepotCenterTurn3, DoubleDepotCenterForward3, DoubleDepotCenterTurn4, DoubleDepotCenterForward4, DoubleDepotLeftReverse1, DoubleDepotLeftReverse2, DoubleDepotLeftTurn5, DoubleDepotLeftForward7, DoubleDepotRightTurn4, DoubleDepotRightForward5, DoubleDepotRightTurn5, DoubleDepotRightForward6, DoubleDepotDriveOff
     }
 
     State state;
@@ -131,8 +130,7 @@ public class DoubleDepotSample2 extends OpMode {
                                     silverMineral2X = (int) recognition.getLeft();
                                 }
                             }
-                            if ((goldMineralX != -1 && silverMineral1X != -1) || (goldMineralX != -1 && silverMineral2X != -1)
-                                || (silverMineral1X != -1 && silverMineral2X != -1)) {
+                            if ((goldMineralX != -1 && silverMineral1X != -1) || (goldMineralX != -1 && silverMineral2X != -1) || (silverMineral1X != -1 && silverMineral2X != -1)) {
                                 if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
                                     telemetry.addData("Gold Mineral Position", "Left");
                                     state = State.DoubleDepotLeft;
@@ -279,7 +277,7 @@ public class DoubleDepotSample2 extends OpMode {
                 robot.Forward(1, 30);
                 robot.Intake.setPower(1);
                 if (robot.DriveDone(30)) {
-                    state = State.DoubleDepotStop;
+                    state = State.DoubleDepotLeftTurn4;
                     robot.Intake.setPower(0);
                     time.reset();
                     robot.Kill();
@@ -299,16 +297,32 @@ public class DoubleDepotSample2 extends OpMode {
                 robot.Forward(1, 30);
                 robot.Intake.setPower(1);
                 if (robot.DriveDone(30)) {
-                    state = State.DoubleDepotStop;
+                    state = State.DoubleDepotLeftTurn5;
                     robot.Intake.setPower(0);
                     time.reset();
                     robot.Kill();
                 }
                 break;
 
+            case DoubleDepotLeftTurn5:
+                robot.TurnAbsolute(-90, gyroangle);
+                if (gyroangle >= -92 && gyroangle <= -88){
+                    state = State.DoubleDepotLeftForward7;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
 
-
-
+            case DoubleDepotLeftForward7:
+                robot.Forward(1, 13);
+                robot.Intake.setPower(1);
+                if (robot.DriveDone(13)) {
+                    state = State.DoubleDepotStop;
+                    robot.Intake.setPower(0);
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
 
             /**End of the Left version of auto**/
 
@@ -433,9 +447,9 @@ public class DoubleDepotSample2 extends OpMode {
                 break;
 
             case DoubleDepotCenterForward4:
-                robot.Forward(1, 20);
+                robot.Forward(1, 13);
                 robot.Intake.setPower(1);
-                if (robot.DriveDone(20)){
+                if (robot.DriveDone(13)){
                     state = State.DoubleDepotStop;
                     robot.Intake.setPower(0);
                     time.reset();
@@ -530,13 +544,50 @@ public class DoubleDepotSample2 extends OpMode {
                 break;
 
             case DoubleDepotRightForward4:
-                robot.Forward(1, 65);
-                if (robot.DriveDone(65)){
+                robot.Forward(1, 30);
+                if (robot.DriveDone(30)){
+                    state = State.DoubleDepotRightTurn4;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+
+            case DoubleDepotRightTurn4:
+                robot.TurnAbsolute(-177, gyroangle);
+                if (gyroangle >= -179 && gyroangle <= 135) {
+                    state = State.DoubleDepotRightForward5;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+
+            case DoubleDepotRightForward5:
+                robot.Forward(1, 50);
+                if (robot.DriveDone(50)){
+                    state = State.DoubleDepotRightTurn5;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+
+            case DoubleDepotRightTurn5:
+                robot.TurnAbsolute(-90, gyroangle);
+                if (gyroangle >= -92 && gyroangle <= -88) {
+                    state = State.DoubleDepotRightForward6;
+                    time.reset();
+                    robot.Kill();
+                }
+                break;
+
+            case DoubleDepotRightForward6:
+                robot.Forward(1, 13);
+                if (robot.DriveDone(13)){
                     state = State.DoubleDepotStop;
                     time.reset();
                     robot.Kill();
                 }
                 break;
+
             /**End of the Right version of auto**/
 
             case DoubleDepotStop:
