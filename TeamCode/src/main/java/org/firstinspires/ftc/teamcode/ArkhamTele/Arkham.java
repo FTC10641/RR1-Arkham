@@ -64,7 +64,6 @@ ArkhamHW robot = new ArkhamHW();
                 else {
                     robot.LiftMotor.setPower(0);
                     robot.LiftMotor2.setPower(0);
-
                 }
 
 
