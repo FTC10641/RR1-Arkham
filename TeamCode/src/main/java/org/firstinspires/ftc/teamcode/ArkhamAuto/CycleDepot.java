@@ -52,7 +52,9 @@ public class CycleDepot extends OpMode {
         CycleDepotLeftForward5, CycleDepotLeftTurn6, CycleDepotLeftForward6,
         CycleDepotLeftTurn7, CycleDepotLeftExtendo2, CycleDepotLeftRetracto2,
         CycleDepotLeftTurn8, CycleDepotLeftTurn9, LeftCycleScore1,
-        LeftCycleScore2, CycleDepotCenterExtendo1, CycleDepotCenterRetracto1, CycleDepotCenterForward6, CycleDepotCenterExtendo2, CycleDepotCenterRetracto2, CenterCycleScore1, CycleDepotRightExtendo1, CycleDepotRightRetracto1, Stop
+        LeftCycleScore2, CycleDepotCenterExtendo1, CycleDepotCenterRetracto1,
+        CycleDepotCenterForward6, CycleDepotCenterExtendo2, CycleDepotCenterRetracto2,
+        CenterCycleScore1, CycleDepotRightExtendo1, CycleDepotRightRetracto1, Stop
     }
 
     State state;
@@ -151,7 +153,8 @@ public class CycleDepot extends OpMode {
                                     silverMineral2X = (int) recognition.getLeft();
                                 }
                             }
-                            if ((goldMineralX != -1 && silverMineral1X != -1) || (goldMineralX != -1 && silverMineral2X != -1) || (silverMineral1X != -1 && silverMineral2X != -1)) {
+                            if ((goldMineralX != -1 && silverMineral1X != -1) || (goldMineralX != -1 && silverMineral2X != -1)
+                                || (silverMineral1X != -1 && silverMineral2X != -1)) {
                                 if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
                                     telemetry.addData("Gold Mineral Position", "Left");
                                     state = State.CycleDepotLeftTurn1;
