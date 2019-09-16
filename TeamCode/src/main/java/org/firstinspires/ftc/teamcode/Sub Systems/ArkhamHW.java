@@ -47,10 +47,6 @@ import com.qualcomm.robotcore.util.Range;
     public static final double COUNTS_PER_INCH2 = (COUNTS_PER_MOTOR_REV2 * DRIVE_GEAR_REDUCTION2) /
             (WHEEL_DIAMETER_INCHES2 * 3.1415);
 
-
-    public ArkhamHW() {
-    }
-
     /** Initialize standard Hardware interfaces **/
 
     public void init(HardwareMap ahwMap) {
